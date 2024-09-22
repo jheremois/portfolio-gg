@@ -2,17 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @layer base {
   :root {
     --destructive-foreground: 0 0% 100%;
     --secondary-foreground: 0 0% 100%;
     --popover-foreground: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --accent-foreground: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    --accent-foreground: 0 0% 100%;
     --muted-foreground: 0 0% 100%;
     --card-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
@@ -25,23 +21,14 @@
     --accent: 249 91% 65%;
     --muted: 240 37% 10%;
     --input: 240 37% 36%;
-    --card: 240 37% 5%;
+    --card: #131111;
     --ring: 249 91% 66%;
     --radius: 0.5rem;
   }
 }
 
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
+body{
+  background-color: #07070E;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -50,7 +37,6 @@ body {
     text-wrap: balance;
   }
 }
-
 
 @keyframes diagonalScroll {
   from {

@@ -3,30 +3,44 @@ import Head from 'next/head';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import toast, { Toaster } from 'react-hot-toast';
 import Image from 'next/image';
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const router = useRouter(); // Use Next.js router to handle redirects
+    const router = useRouter();
+    const { data: session, status } = useSession();
+
+    // Redirect to profile page if already authenticated
+    useEffect(() => {
+        if (status === 'authenticated') {
+            router.push('/profile'); // Redirect to profile page
+        }
+    }, [status, router]);
 
     const handleLogin = async () => {
         setIsLoading(true);
-      
         try {
-          const result = await signIn('google', { callbackUrl: '/profile' }); // Redirect to profile page
-          if (result?.error) {
-            toast.error('Failed to sign in with Google.');
-          }
+            const result = await signIn('google', { callbackUrl: '/profile' });
+            if (result?.error) {
+                toast.error('Failed to sign in with Google.');
+            }
         } catch (error) {
-          console.error('Error signing in:', error);
-          toast.error('An unexpected error occurred. Please try again.');
+            console.error('Error signing in:', error);
+            toast.error('An unexpected error occurred. Please try again.');
         } finally {
-          setIsLoading(false);
+            setIsLoading(false);
         }
-      };
-      
+    };
+
+    if (status === 'loading') {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                Loading...
+            </div>
+        );
+    }
 
     return (
         <>

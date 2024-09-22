@@ -9,17 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.12.1",
     "@heroicons/react": "^2.1.5",
     "@supabase/supabase-js": "^2.45.3",
+    "@types/formidable": "^3.4.5",
     "clsx": "^2.1.1",
+    "formidable": "^3.5.1",
+    "formik": "^2.4.6",
     "framer-motion": "^11.5.4",
+    "lucide-react": "^0.445.0",
     "next": "14.2.8",
     "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/node": "^20",

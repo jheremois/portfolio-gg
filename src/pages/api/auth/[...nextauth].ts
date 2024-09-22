@@ -53,7 +53,8 @@ export const authOptions = {
             .insert({
               email,
               google_id,
-              username: email.split('@')[0], // Customize username as needed
+              //username: email.split('@')[0], // Customize username as needed
+              username: "",
               name,
               profile_image: image,
             });
