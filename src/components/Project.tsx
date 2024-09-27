@@ -19,7 +19,7 @@ const Project = (prjct: projectProperties)=>{
                     backgroundColor: `#${prjct.imgBg}`,
                     backgroundPosition: "0px 60px"
                 }}
-                className="moveTopDel w-full bg rounded-xl h-[22rem] bg-no-repeat bg-cover overflow-hidden"
+                className="moveTopDel w-full bg rounded-3xl h-[22rem] ring-1 ring-gray-200/10 bg-no-repeat bg-cover overflow-hidden"
             >
                 <div 
                     className="h-56 p-6  bg-black"

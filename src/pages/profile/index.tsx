@@ -5,60 +5,20 @@ import { toast } from 'react-hot-toast';
 import EditProfile from '@/components/EditProfile';
 import Link from 'next/link';
 import Project from '@/components/Project';
-import UserSections from '@/components/UserSections';
 
-const projectList = [
-  {
-    bgColor: '#DA403F',
-    description: 'Oximiun oficial e-comerce.',
-    imgBg: '/project5.png',
-    projectUrl: 'https://oxmiun.com/',
-    title: 'Oxmiun'
-  },
-  {
-    bgColor: '#5749B8',
-    description: 'Create and rate posts from users.',
-    imgBg: '/project4.png',
-    projectUrl: 'https://play.google.com/store/apps/details?id=ritme.app',
-    //projectUrl: 'https://ritme.vercel.app/',
-    title: 'Ritme - Mobile App'
-  },
-  {
-    bgColor: '#303443',
-    description: 'PortfolioPlus ofical website.',
-    imgBg: '/project2.png',
-    projectUrl: 'https://portfolio-plus-info.vercel.app/',
-    title: 'PortfolioPlus Website'
-  },
-  /* {
-      bgColor: '#007AFF',
-      description: 'App for easy portfolio creation.',
-      imgBg: '/project1.png',
-      projectUrl: 'https://portfolioplus-dun.vercel.app/',
-      title: 'PortfolioPlus'
-    }, */
-  {
-    bgColor: '#E9A62E',
-    description: 'Ovion Company oficial website.',
-    imgBg: '/project3.png',
-    projectUrl: 'https://www.ovioncompany.com/',
-    title: 'Ovion Company'
-  },
-  {
-    bgColor: '#CF5050',
-    description: 'Ritme web version.',
-    imgBg: '/project9.png',
-    projectUrl: 'https://ritme.vercel.app/',
-    title: 'Ritme - web'
-  },
-  /* {
-      bgColor: '#0CC77E',
-      description: 'Daily crypto and stocks news.',
-      imgBg: '/project6.png',
-      projectUrl: 'https://dribbble.com/shots/21292929-Shuni-How-s-things-going',
-      title: 'Shuni'
-  } */
-]
+// Definimos las interfaces para nuestros nuevos tipos de datos
+interface Skill {
+  id: string;
+  skill_name: string;
+}
+
+interface SectionItem {
+  id: string;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+}
 
 export default function Profile() {
   const { data: session, status }: any = useSession();
@@ -71,35 +31,41 @@ export default function Profile() {
     description: '',
     profile_image: ''
   });
+  const [portfolioItems, setPortfolioItems] = useState([]);
+
+  // Nuevos estados para habilidades y secciones
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [experienceItems, setExperienceItems] = useState<SectionItem[]>([]);
+  const [educationItems, setEducationItems] = useState<SectionItem[]>([]);
+  const [experienceSectionName, setExperienceSectionName] = useState('Experience');
+  const [educationSectionName, setEducationSectionName] = useState('Education');
+
+  const fetchPortfolioItems = async () => {
+    try {
+      const response = await fetch('/api/getPortfolioItems');
+      const data = await response.json();
+
+      if (response.ok) {
+        setPortfolioItems(data.portfolioItems);
+      } else {
+        toast.error(data.error || 'Failed to fetch portfolio items');
+      }
+    } catch (error) {
+      toast.error('An error occurred while fetching portfolio items.');
+    }
+  };
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/');
     } else if (status === 'authenticated' && session?.user) {
       fetchProfileData();
+      fetchPortfolioItems();
+      fetchSkills();
+      fetchExperienceItems();
+      fetchEducationItems();
     }
   }, [status, session, router]);
-
-  const [portfolioItems, setPortfolioItems] = useState([]);
-
-  useEffect(() => {
-    const fetchPortfolioItems = async () => {
-      try {
-        const response = await fetch('/api/getPortfolioItems');
-        const data = await response.json();
-
-        if (response.ok) {
-          setPortfolioItems(data.portfolioItems);
-        } else {
-          toast.error(data.error || 'Failed to fetch portfolio items');
-        }
-      } catch (error) {
-        toast.error('An error occurred while fetching portfolio items.');
-      }
-    };
-
-    fetchPortfolioItems();
-  }, []);
 
   const fetchProfileData = async () => {
     try {
@@ -133,6 +99,54 @@ export default function Profile() {
     fetchProfileData();
   };
 
+  // Nuevas funciones para manejar habilidades y secciones
+  const fetchSkills = async () => {
+    try {
+      const response = await fetch('/api/skills');
+      const data = await response.json();
+      if (response.ok) {
+        setSkills(data);
+      } else {
+        toast.error('Failed to load skills');
+      }
+    } catch (error) {
+      console.error('Error fetching skills:', error);
+      toast.error('An error occurred while loading skills.');
+    }
+  };
+
+  const fetchExperienceItems = async () => {
+    try {
+      const response = await fetch('/api/experience-items');
+      const data = await response.json();
+      if (response.ok) {
+        setExperienceItems(data.items);
+        setExperienceSectionName(data.sectionName);
+      } else {
+        toast.error('Failed to load experience items');
+      }
+    } catch (error) {
+      console.error('Error fetching experience items:', error);
+      toast.error('An error occurred while loading experience items.');
+    }
+  };
+
+  const fetchEducationItems = async () => {
+    try {
+      const response = await fetch('/api/education-items');
+      const data = await response.json();
+      if (response.ok) {
+        setEducationItems(data.items);
+        setEducationSectionName(data.sectionName);
+      } else {
+        toast.error('Failed to load education items');
+      }
+    } catch (error) {
+      console.error('Error fetching education items:', error);
+      toast.error('An error occurred while loading education items.');
+    }
+  };
+
   if (status === 'loading') {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
@@ -153,13 +167,13 @@ export default function Profile() {
         </>
       ) : (
         <div className="">
-          <section className='py-6 pb-8'>
+          <section className='pt-6'>
             <div>
               <h1 className='font-semibold text-title text-2xl sm:text-3xl mb-6'>Your Profile</h1>
               <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8 lg:items-center">
                 {/* Profile info */}
                 <div className="flex flex-col lg:flex-row items-center gap-6 lg:col-span-9">
-                  <img src={profileData.profile_image} alt={profileData.fullName} className="w-full h-auto lg:w-[19rem] lg:h-[19rem] 2xl:w-[21rem] 2xl:h-[21rem] rounded-2xl object-cover" />
+                  <img src={profileData.profile_image} alt={profileData.fullName} className="w-full h-auto lg:w-[19rem] lg:h-[19rem] 2xl:w-[21rem] 2xl:h-[21rem] rounded-3xl object-cover" />
                   <div className="text-center sm:text-left">
                     <h3 className='text-4xl sm:text-3xl lg:text-4xl font-semibold'>
                       {profileData.fullName}
@@ -168,21 +182,21 @@ export default function Profile() {
                       {profileData.profession}
                     </p>
                     <p className="text-base sm:text-lg text-text">{profileData.description}</p>
-                    <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                    {/* <div className="flex flex-col sm:flex-row gap-4 mt-4">
                       <Link href={"profile/edit"}>
-                          <button
-                            className="w-full sm:w-auto bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
-                          >
-                            Edit Profile
-                          </button>
-                        </Link>
                         <button
-                          className="w-full sm:w-auto bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition duration-300"
-                          onClick={handleLogout}
+                          className="w-full sm:w-auto bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition duration-300"
                         >
-                          Logout
+                          Edit Profile
                         </button>
-                    </div>
+                      </Link>
+                      <button
+                        className="w-full sm:w-auto bg-red-600 text-white py-2 px-4 rounded-xl hover:bg-red-700 transition duration-300"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </div> */}
                   </div>
                 </div>
                 {/* Social media and contact */}
@@ -224,19 +238,62 @@ export default function Profile() {
               </div>
             </div>
           </section>
-          {/* 
-          userSection:
-          */}
-          <UserSections userId={session?.user?.id || "34f97ba7-12be-449b-bd51-39c2c5fcb61a"} />
-          <hr className='border-t-[3px] border-gray-200/10' />
-          <div className="py-6 grid gap-6">
+
+          <hr className='border-t-[3px] border-gray-400/10 my-8' />
+
+          <section className='grid lg:grid-cols-3 divide-x divide-gray-50/5 gap-2 bg-[#f0f0f002] text-text lg:py-5 lg:px-2 border-2 border-gray-200/20 rounded-3xl'>
+            {/* Nueva sección de experiencia */}
+            <section className='p-6'>
+              <div className='flex justify-between items-center mb-4'>
+                <h3 className='text-2xl font-semibold'>{experienceSectionName}</h3>
+              </div>
+              <div className="flex flex-col gap-3">
+                {experienceItems.map((item) => (
+                  <div key={item.id} className='rounded'>
+                    <h3 className='text-lg font-medium'>{item.title}</h3>
+                    <p className='text-gray-200/70'>{item.description}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+            {/* Nueva sección de educación */}
+            <section className='p-6'>
+              <div className='flex justify-between items-center mb-4'>
+                <h2 className='text-2xl font-semibold'>{educationSectionName}</h2>
+              </div>
+              <div className="flex flex-col gap-3">
+                {educationItems.map((item) => (
+                  <div key={item.id} className='rounded'>
+                    <h3 className='text-lg font-medium'>{item.title}</h3>
+                    <p className='text-gray-200/70'>{item.description}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+            {/* Nueva sección de habilidades */}
+            <section className='p-6'>
+              <h2 className='text-2xl font-semibold mb-4'>Skills</h2>
+              <div className='flex flex-wrap gap-3 gap-y-4'>
+                {skills.map((skill) => (
+                  <div key={skill.id} className='bg-blue-800/10 ring-2 ring-blue-100/30 text-text px-3 py-1 rounded-full flex items-center'>
+                    <span>{skill.skill_name}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </section>
+
+
+          {/* Seccion de proyectos */}
+          <hr className='border-t-[3px] border-gray-400/10 my-8' />
+          <div className="grid gap-6">
             <div className="flex items-center justify-between">
               <h4 className='fadeIn text-3xl md:text-2xl font-semibold text-center md:text-start'>
                 Projects
               </h4>
               <div className="">
                 <Link href={"/profile/projects"}>
-                  <button className='bg-secondary border-2 border-gray-300/20 py-3 px-6 rounded-xl text-title font-semibold'>
+                  <button className='bg-secondary border-2 border-gray-300/20 py-3 px-6 rounded-2xl text-title font-semibold'>
                     Add project
                   </button>
                 </Link>
@@ -247,9 +304,8 @@ export default function Profile() {
                 <Project
                   key={item.id}
                   imgBg={item.image_url || ''}  // Assuming your API provides image_url
-                  title={item.portfolio_name }
-                  //description={item.description || ''}
-                  description={item.image_url || ''}
+                  title={item.portfolio_name}
+                  description={item.description || ''}
                   bgColor={item.color || '#000'}  // Assuming there's a color field
                   projectUrl={item.link || '#'}  // Assuming project link
                 />
