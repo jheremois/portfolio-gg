@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import EditProfile from '@/components/EditProfile';
 import Link from 'next/link';
 import Project from '@/components/Project';
+import UserSections from '@/components/UserSections';
 
 const projectList = [
   {
@@ -167,21 +168,21 @@ export default function Profile() {
                       {profileData.profession}
                     </p>
                     <p className="text-base sm:text-lg text-text">{profileData.description}</p>
-                    {/* <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                    <div className="flex flex-col sm:flex-row gap-4 mt-4">
                       <Link href={"profile/edit"}>
+                          <button
+                            className="w-full sm:w-auto bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
+                          >
+                            Edit Profile
+                          </button>
+                        </Link>
                         <button
-                          className="w-full sm:w-auto bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
+                          className="w-full sm:w-auto bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition duration-300"
+                          onClick={handleLogout}
                         >
-                          Edit Profile
+                          Logout
                         </button>
-                      </Link>
-                      <button
-                        className="w-full sm:w-auto bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition duration-300"
-                        onClick={handleLogout}
-                      >
-                        Logout
-                      </button>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
                 {/* Social media and contact */}
@@ -223,6 +224,10 @@ export default function Profile() {
               </div>
             </div>
           </section>
+          {/* 
+          userSection:
+          */}
+          <UserSections userId={session?.user?.id || "34f97ba7-12be-449b-bd51-39c2c5fcb61a"} />
           <hr className='border-t-[3px] border-gray-200/10' />
           <div className="py-6 grid gap-6">
             <div className="flex items-center justify-between">
@@ -242,8 +247,9 @@ export default function Profile() {
                 <Project
                   key={item.id}
                   imgBg={item.image_url || ''}  // Assuming your API provides image_url
-                  title={item.portfolio_name}
-                  description={item.description || ''}
+                  title={item.portfolio_name }
+                  //description={item.description || ''}
+                  description={item.image_url || ''}
                   bgColor={item.color || '#000'}  // Assuming there's a color field
                   projectUrl={item.link || '#'}  // Assuming project link
                 />

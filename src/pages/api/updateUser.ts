@@ -19,6 +19,14 @@ export const config = {
   },
 };
 
+// Function to clean filename
+function cleanFileName(fileName: string): string {
+  return fileName
+    .replace(/\s+/g, '-')        // Replace spaces with hyphens
+    .replace(/[^a-zA-Z0-9-_.]/g, '')  // Remove any character that's not alphanumeric, hyphen, underscore, or dot
+    .toLowerCase();              // Convert to lowercase
+}
+
 export default async function handler(req: any, res: any) {
   const session = await getServerSession(req, res, authOptions);
 
@@ -68,7 +76,8 @@ export default async function handler(req: any, res: any) {
     let profilePicUrl = null;
     const profilePic = Array.isArray(files.profile_image) ? files.profile_image[0] : files.profile_image;
     if (profilePic && typeof profilePic.filepath === 'string') {
-      const filePath = `profile-pics/${session.user.email}_${profilePic.originalFilename}`;
+      const cleanedFileName = cleanFileName(profilePic.originalFilename || 'unnamed');
+      const filePath = `profile-pics/${session.user.email}_${cleanedFileName}`;
       const blob = bucket.file(filePath);
 
       try {

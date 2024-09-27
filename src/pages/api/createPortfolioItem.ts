@@ -18,18 +18,24 @@ export const config = {
   },
 };
 
+// Function to clean filename
+function cleanFileName(fileName: string): string {
+  return fileName
+    .replace(/\s+/g, '-')        // Replace spaces with hyphens
+    .replace(/[^a-zA-Z0-9-_.]/g, '')  // Remove any character that's not alphanumeric, hyphen, underscore, or dot
+    .toLowerCase();              // Convert to lowercase
+}
+
 export default async function handler(req: any, res: any) {
-  // Ensure the session is retrieved correctly and contains the user info
   const session = await getServerSession(req, res, authOptions);
 
   if (!session || !session.user) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
 
-  // Fetch the user details from the database using the email
   const { data: userData, error: userError } = await supabase
     .from('users')
-    .select('id') // Select the user ID
+    .select('id')
     .eq('email', session.user.email)
     .maybeSingle();
 
@@ -46,7 +52,6 @@ export default async function handler(req: any, res: any) {
       return res.status(500).json({ error: 'Failed to parse form data' });
     }
 
-    // Properly extract fields from the form data
     const { portfolio_name, color, description, link } = {
       portfolio_name: Array.isArray(fields.portfolio_name) ? fields.portfolio_name[0] : fields.portfolio_name,
       color: Array.isArray(fields.color) ? fields.color[0] : fields.color,
@@ -54,7 +59,7 @@ export default async function handler(req: any, res: any) {
       link: Array.isArray(fields.link) ? fields.link[0] : fields.link,
     };
 
-    const user_id = userData.id; // Now we have the correct user ID from the database
+    const user_id = userData.id;
 
     if (!portfolio_name || !color || !description || !link) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -62,11 +67,11 @@ export default async function handler(req: any, res: any) {
 
     let image_url = null;
 
-    // Handle image upload if there is an image
     const imageFile = files.image;
     if (imageFile && Array.isArray(imageFile)) {
       const file = imageFile[0];
-      const filePath = `portfolio-images/${session.user.email}_${file.originalFilename}`;
+      const cleanedFileName = cleanFileName(file.originalFilename || 'unnamed');
+      const filePath = `portfolio-images/${session.user.email}_${cleanedFileName}`;
       const blob = bucket.file(filePath);
 
       try {
@@ -95,11 +100,10 @@ export default async function handler(req: any, res: any) {
       }
     }
 
-    // Insert the portfolio item into the database and associate it with the user
     const { data, error } = await supabase
       .from('portfolio_items')
       .insert({
-        user_id, // Associate the portfolio item with the current user
+        user_id,
         portfolio_name,
         image_url,
         color,
