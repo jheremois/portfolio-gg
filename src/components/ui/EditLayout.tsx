@@ -24,10 +24,6 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
         setIsSidebarOpen(false)
     }
 
-    const handleBackClick = () => {
-        router.back()
-    }
-
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 768) {
@@ -36,8 +32,6 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                 setIsSidebarOpen(false)
             }
         }
-
-        console.log(user);
 
         window.addEventListener('resize', handleResize)
         handleResize()

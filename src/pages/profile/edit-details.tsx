@@ -97,12 +97,10 @@ export default function EditProfile() {
         try {
             const response = await fetch('/api/skills')
             const data = await response.json()
-            console.log('Skills data:', data)
             if (response.ok) {
                 const filteredSkills = (data || []).filter((skill: Skill | null) =>
                     skill && typeof skill === 'object' && 'id' in skill && 'skill_name' in skill
                 ).slice(0, MAX_SKILLS)
-                console.log('Filtered skills:', filteredSkills)
                 setSkills(filteredSkills)
             } else {
                 toast.error('Failed to load skills')
@@ -117,12 +115,10 @@ export default function EditProfile() {
         try {
             const response = await fetch('/api/experience-items')
             const data = await response.json()
-            console.log('Experience items data:', data)
             if (response.ok) {
                 const filteredItems = (data.items || []).filter((item: SectionItem | null) =>
                     item && typeof item === 'object' && 'id' in item && 'title' in item && 'description' in item
                 ).slice(0, MAX_ITEMS)
-                console.log('Filtered experience items:', filteredItems)
                 setExperienceItems(filteredItems)
                 setExperienceSectionName(data.sectionName || 'Experience')
             } else {
@@ -138,12 +134,10 @@ export default function EditProfile() {
         try {
             const response = await fetch('/api/education-items')
             const data = await response.json()
-            console.log('Education items data:', data)
             if (response.ok) {
                 const filteredItems = (data.items || []).filter((item: SectionItem | null) =>
                     item && typeof item === 'object' && 'id' in item && 'title' in item && 'description' in item
                 ).slice(0, MAX_ITEMS)
-                console.log('Filtered education items:', filteredItems)
                 setEducationItems(filteredItems)
                 setEducationSectionName(data.sectionName || 'Education')
             } else {
