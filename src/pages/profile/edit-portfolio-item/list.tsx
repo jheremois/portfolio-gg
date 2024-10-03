@@ -91,7 +91,7 @@ export default function Profile() {
     }, [status, session, router])
 
     const handleEdit = (id: string) => {
-        router.push(`/profile/edit-project/${id}`)
+        router.push(`/profile/edit-portfolio-item/${id}`)
     }
 
     const handleDelete = (id: string) => {

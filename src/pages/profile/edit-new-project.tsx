@@ -84,7 +84,7 @@ export default function CreatePortfolioItem() {
         resetForm();
         setImageFile(null);
         setImagePreview(null);
-        router.push('/profile');
+        router.push('/profile/edit-portfolio-item/list');
       } else {
         toast.error(data.error || 'Failed to create portfolio item');
       }

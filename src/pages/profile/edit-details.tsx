@@ -729,7 +729,7 @@ export default function EditProfile() {
                 </Dialog>
 
                 <Dialog open={sectionNameModalState.isOpen} onOpenChange={(isOpen) => setSectionNameModalState({ ...sectionNameModalState, isOpen })}>
-                    <DialogContent>
+                <DialogContent className='bg-card text-text'>
                         <DialogHeader>
                             <DialogTitle>Edit Section Name</DialogTitle>
                         </DialogHeader>
@@ -747,7 +747,7 @@ export default function EditProfile() {
                                     validateSectionName(e.target.value)
                                 }}
                                 placeholder="New Section Name"
-                                className="w-full border rounded px-3 py-2 mb-2"
+                                className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             />
                             {formErrors.sectionName && <p className="text-red-500 mb-2">{formErrors.sectionName}</p>}
                             <DialogFooter>

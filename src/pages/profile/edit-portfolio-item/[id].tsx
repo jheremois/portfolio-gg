@@ -101,6 +101,7 @@ export default function EditPortfolioItem() {
 
             if (response.ok) {
                 toast.success('Portfolio item updated successfully')
+                router.push('/profile/edit-portfolio-item/list')
             } else {
                 toast.error(data.error || 'Failed to update portfolio item')
             }
@@ -259,7 +260,7 @@ export default function EditPortfolioItem() {
                                 <div className="flex justify-between">
                                     <button
                                         type="button"
-                                        onClick={() => router.push('/profile')}
+                                        onClick={() => router.push('/profile/edit-portfolio-item/list')}
                                         className="bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
                                     >
                                         Cancel
