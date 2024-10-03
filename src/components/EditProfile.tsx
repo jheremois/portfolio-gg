@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
+import { PlusIcon, TrashIcon } from 'lucide-react';
 
 const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -14,7 +15,15 @@ const validationSchema = Yup.object().shape({
     fullName: Yup.string().required('Full name is required'),
     profession: Yup.string().required('Profession is required'),
     description: Yup.string(),
+    socialLinks: Yup.array().of(
+        Yup.object().shape({
+            platform: Yup.string().required('Platform is required'),
+            link: Yup.string().url('Invalid URL').required('Link is required'),
+        })
+    ),
 });
+
+const socialPlatforms = ['Instagram', 'Facebook', 'Website', 'X', 'GitHub', 'LinkedIn', 'Other'];
 
 interface EditProfileProps {
     funcion?: () => void;
@@ -23,12 +32,14 @@ interface EditProfileProps {
 export default function EditProfile({ funcion }: EditProfileProps) {
     const { data: session, status }: any = useSession();
     const router = useRouter();
+    const [formChanged, setFormChanged] = useState(false);
     const [profileData, setProfileData] = useState({
         username: '',
         fullName: '',
         profession: '',
         description: '',
-        profile_image: ''
+        profile_image: '',
+        socialLinks: [{ platform: '', link: '' }],
     });
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -53,6 +64,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                     profession: data.profession || '',
                     description: data.description || '',
                     profile_image: data.profile_image || '',
+                    socialLinks: data.socialLinks || [{ platform: '', link: '' }],
                 });
             } else {
                 toast.error('Failed to load profile data');
@@ -76,12 +88,13 @@ export default function EditProfile({ funcion }: EditProfileProps) {
         }
     };
 
-    const handleSubmit = async (values: any, { setSubmitting }: any) => {
+    const handleSubmit = async (values: any, { setSubmitting, resetForm }: any) => {
         const formData = new FormData();
         formData.append('username', values.username);
         formData.append('profession', values.profession);
         formData.append('fullName', values.fullName);
         formData.append('description', values.description);
+        formData.append('socialLinks', JSON.stringify(values.socialLinks));
         if (imageFile) {
             formData.append('profile_image', imageFile);
         }
@@ -99,7 +112,9 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                 if (funcion) {
                     funcion();
                 }
-                router.push('/profile');
+                setFormChanged(false);
+                resetForm({ values });
+                //router.push('/profile');
             } else {
                 toast.error(data.error || 'Failed to update profile');
             }
@@ -122,8 +137,9 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                     initialValues={profileData}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
+                    onChangeCapture={() => setFormChanged(true)}
                 >
-                    {({ isSubmitting, setFieldValue }) => (
+                    {({ isSubmitting, setFieldValue, values }) => (
                         <Form className="space-y-6">
                             <div className="flex flex-col lg:flex-row text-center lg:text-start items-center lg:gap-8">
                                 <div className="flex w-full lg:w-fit">
@@ -205,10 +221,64 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                         rows={4}
                                     />
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-2">Social Media Links</label>
+                                    <FieldArray name="socialLinks">
+                                        {({ remove, push }) => (
+                                            <div>
+                                                {values.socialLinks.map((_, index) => (
+                                                    <div key={index} className="flex items-center space-x-2 mb-2">
+                                                        <Field
+                                                            as="select"
+                                                            name={`socialLinks.${index}.platform`}
+                                                            className="flex-1 px-3 py-2 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                        >
+                                                            <option value="">Select Platform</option>
+                                                            {socialPlatforms.map((platform) => (
+                                                                <option key={platform} value={platform}>{platform}</option>
+                                                            ))}
+                                                        </Field>
+                                                        {/* {values.socialLinks[index].platform === 'Other' && (
+                                                            <Field
+                                                                name={`socialLinks.${index}.customPlatform`}
+                                                                type="text"
+                                                                placeholder="Custom Platform"
+                                                                className="flex-1 px-3 py-2 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                            />
+                                                        )} */}
+                                                        <Field
+                                                            name={`socialLinks.${index}.link`}
+                                                            type="text"
+                                                            placeholder="Link"
+                                                            className="flex-1 px-3 py-2 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => remove(index)}
+                                                            className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                                        >
+                                                            <TrashIcon size={16} />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                                <ErrorMessage name={`socialLinks.${values.socialLinks.length - 1}.platform`} component="p" className="text-red-500 text-xs mt-1" />
+                                                <ErrorMessage name={`socialLinks.${values.socialLinks.length - 1}.link`} component="p" className="text-red-500 text-xs mt-1" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => push({ platform: '', link: '' })}
+                                                    className="cursor-pointer mb-2 bg-input border-2 rounded-lg border-gray-300/20 text-text py-3 px-10 mx-auto lg:mx-0 w-full mt-2 flex justify-center"
+                                                >
+                                                    <PlusIcon size={16} className="mr-1" /> Add Social Link
+                                                </button>
+                                            </div>
+                                        )}
+                                    </FieldArray>
+                                </div>
                             </div>
                             <button
                                 type="submit"
-                                className={`w-full bg-blue-600 text-text py-3.5 px-4 text-lg rounded-lg hover:bg-blue-700 transition duration-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`w-full bg-blue-600 text-text py-3.5 px-4 text-lg rounded-lg transition duration-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                                    }`}
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? 'Updating...' : 'Update Profile'}

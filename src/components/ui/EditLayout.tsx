@@ -98,7 +98,7 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                             <Link href={tab.path}>
                                 <span
                                     className={`flex items-center py-5 px-4 rounded-2xl text-xl font-semibold transition duration-200 ${activeTab === tab.path
-                                            ? 'bg-gray-200/20 text-white'
+                                            ? 'bg-gray-100/15 text-white'
                                             : 'text-text hover:bg-gray-300/20'
                                         }`}
                                     onClick={() => handleTabClick(tab.path)}

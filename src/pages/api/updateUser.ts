@@ -42,11 +42,12 @@ export default async function handler(req: any, res: any) {
       return res.status(500).json({ error: 'Failed to parse form data' });
     }
 
-    const { username, profession, fullName, description } = {
+    const { username, profession, fullName, description, socialLinks } = {
       username: Array.isArray(fields.username) ? fields.username[0] : fields.username,
       profession: Array.isArray(fields.profession) ? fields.profession[0] : fields.profession,
       fullName: Array.isArray(fields.fullName) ? fields.fullName[0] : fields.fullName,
-      description: Array.isArray(fields.description) ? fields.description[0] : fields.description, 
+      description: Array.isArray(fields.description) ? fields.description[0] : fields.description,
+      socialLinks: Array.isArray(fields.socialLinks) ? fields.socialLinks[0] : fields.socialLinks,
     };
 
     // Ensure the username is valid (alphanumeric only, no spaces)
@@ -107,7 +108,7 @@ export default async function handler(req: any, res: any) {
     }
 
     // Update user data in Supabase
-    const { error: updateError } = await supabase
+    const { data: updatedUser, error: updateError } = await supabase
       .from('users')
       .update({
         username,
@@ -116,11 +117,50 @@ export default async function handler(req: any, res: any) {
         description,
         profile_image: profilePicUrl || session.user.profile_image,
       })
-      .eq('email', session.user.email);
+      .eq('email', session.user.email)
+      .select('id')
+      .single();
 
     if (updateError) {
       console.error('Error updating profile in Supabase:', updateError);
       return res.status(500).json({ error: 'Failed to update profile' });
+    }
+
+    // Handle social links
+    if (socialLinks) {
+      try {
+        const parsedSocialLinks = JSON.parse(socialLinks);
+
+        // Delete existing social links
+        const { error: deleteError } = await supabase
+          .from('social_links')
+          .delete()
+          .eq('user_id', updatedUser.id);
+
+        if (deleteError) {
+          console.error('Error deleting existing social links:', deleteError);
+          return res.status(500).json({ error: 'Failed to update social links' });
+        }
+
+        // Insert new social links
+        if (parsedSocialLinks.length > 0) {
+          const { error: insertError } = await supabase
+            .from('social_links')
+            .insert(parsedSocialLinks.map((link: any) => ({
+              user_id: updatedUser.id,
+              platform: link.platform,
+              link: link.link,
+            })));
+
+          if (insertError) {
+            console.error('Error inserting new social links:', insertError);
+            return res.status(500).json({ error: 'Failed to update social links' });
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing or updating social links:', error);
+        return res.status(500).json({ error: 'Failed to update social links' });
+      }
     }
 
     return res.status(200).json({ message: 'Profile updated successfully' });

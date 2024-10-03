@@ -10,22 +10,40 @@ export default async function handler(req: any, res: any) {
       return res.status(401).json({ error: 'Not authenticated' });
     }
 
-    const { data, error } = await supabase
+    // Fetch user data
+    const { data: userData, error: userError } = await supabase
       .from('users')
       .select('id, username, name, profession, description, profile_image')
       .eq('email', session.user.email)
       .single();
 
-    if (error) {
-      console.error('Supabase error:', error);
-      return res.status(500).json({ error: 'Failed to fetch user profile', details: error });
+    if (userError) {
+      console.error('Supabase error fetching user:', userError);
+      return res.status(500).json({ error: 'Failed to fetch user profile', details: userError });
     }
 
-    if (!data) {
+    if (!userData) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    return res.status(200).json(data);
+    // Fetch social links
+    const { data: socialLinksData, error: socialLinksError } = await supabase
+      .from('social_links')
+      .select('platform, link')
+      .eq('user_id', userData.id);
+
+    if (socialLinksError) {
+      console.error('Supabase error fetching social links:', socialLinksError);
+      return res.status(500).json({ error: 'Failed to fetch social links', details: socialLinksError });
+    }
+
+    // Combine user data with social links
+    const responseData = {
+      ...userData,
+      socialLinks: socialLinksData || []
+    };
+
+    return res.status(200).json(responseData);
   } catch (error) {
     console.error('Unexpected error in getUser:', error);
     return res.status(500).json({ error: 'An unexpected error occurred' });

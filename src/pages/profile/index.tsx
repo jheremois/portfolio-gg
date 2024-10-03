@@ -292,11 +292,11 @@ export default function Profile() {
                 Projects
               </h4>
               <div className="">
-                <Link href={"/profile/projects"}>
+                {/* <Link href={"/profile/projects"}>
                   <button className='bg-secondary border-2 border-gray-300/20 py-3 px-6 rounded-2xl text-title font-semibold'>
                     Add project
                   </button>
-                </Link>
+                </Link> */}
               </div>
             </div>
             <div className="projectList grid md:grid-cols-3 gap-7">

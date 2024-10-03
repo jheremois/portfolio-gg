@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import EditLayout from '@/components/ui/EditLayout'
-import { Loader2, PlusIcon } from 'lucide-react'
+import { Loader2, PlusIcon, XIcon } from 'lucide-react'
 
 interface Skill {
     id: string
@@ -482,12 +482,12 @@ export default function EditProfile() {
                                 <button
                                     onClick={() => handleDeleteSkill(skill.id)}
                                     className="
-                                        ml-2 text-black bg-red-500 w-3 h-3 flex items-center justify-center 
-                                        rounded-full hover:bg-red-500 hover:scale-105 duration-100
+                                        ml-2 text-black bg-red-500 w-3 h-3 cale-105 flex items-center justify-center 
+                                        rounded-full hover:bg-red-500 hover:scale-110 duration-100
                                     "
                                     aria-label={`Delete ${skill.skill_name} skill`}
                                 >
-                                    ×
+                                    <XIcon/>
                                 </button>
                             </div>
                         ))}
