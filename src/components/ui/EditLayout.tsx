@@ -15,7 +15,7 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
     const tabs = [
         { name: 'Profile', path: '/profile/edit', icon: User },
         { name: 'Details', path: '/profile/edit-details', icon: FileText },
-        { name: 'Projects', path: '/portfolio', icon: Briefcase },
+        { name: 'Projects', path: '/profile/edit-portfolio-item/list', icon: Briefcase },
     ]
 
     const handleTabClick = (path: string) => {
@@ -110,10 +110,12 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                         </li>
                     ))}
                 </ul>
-                <button className="mt-6 flex items-center py-5 w-full px-4 bg-blue-600 text-white rounded-2xl hover:bg-blue-800 transition duration-200">
-                    <PlusCircle className="mr-3 h-5 w-5" />
-                    Add new Project
-                </button>
+                <Link href={"/profile/edit-new-project"}>
+                    <button className="mt-6 flex items-center py-5 w-full px-4 bg-blue-600 text-white font-semibold rounded-2xl hover:bg-blue-800 transition duration-200">
+                        <PlusCircle className="mr-3 h-5 w-5" />
+                        Add new Project
+                    </button>
+                </Link>
             </nav>
 
             {/* Main Content Area */}

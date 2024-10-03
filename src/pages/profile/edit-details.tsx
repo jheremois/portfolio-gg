@@ -675,12 +675,11 @@ export default function EditProfile() {
                     )}
                 </section>
 
-                <button
-                    onClick={() => router.push('/profile')}
+                {/* <button
                     className="bg-primary w-full text-white text-lg font-semibold px-4 py-3 rounded-lg"
                 >
-                    Save and Return to Profile
-                </button>
+                    Save profile information
+                </button> */}
 
                 <Dialog open={editModalState.isOpen} onOpenChange={(isOpen) => setEditModalState({ ...editModalState, isOpen })}>
                     <DialogContent className='bg-card text-text'>
