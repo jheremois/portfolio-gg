@@ -114,7 +114,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                 }
                 setFormChanged(false);
                 resetForm({ values });
-                //router.push('/profile');
+                router.push('/profile/edit');
             } else {
                 toast.error(data.error || 'Failed to update profile');
             }

@@ -31,7 +31,7 @@ export default function ShareModal({ username }: ShareModalProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <button className="px-4 py-3 border-2 border-gray-200/30 rounded-xl w-full text-base">
+                <button className="px-4 py-3 border-2 border-gray-200/30 rounded-xl font-semibold bg-secondary w-full text-base">
                     Share
                 </button>
             </DialogTrigger>

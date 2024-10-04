@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -6,6 +8,7 @@ import EditProfile from '@/components/EditProfile';
 import Link from 'next/link';
 import Project from '@/components/Project';
 import ShareModal from '@/components/Sharemodal';
+import { motion } from 'framer-motion';
 
 // Definimos las interfaces para nuestros nuevos tipos de datos
 interface Skill {
@@ -42,6 +45,14 @@ export default function Profile() {
   const [experienceSectionName, setExperienceSectionName] = useState('Experience');
   const [educationSectionName, setEducationSectionName] = useState('Education');
 
+  // New loading states
+  const [isLoading, setIsLoading] = useState(true);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+  const [portfolioLoaded, setPortfolioLoaded] = useState(false);
+  const [skillsLoaded, setSkillsLoaded] = useState(false);
+  const [experienceLoaded, setExperienceLoaded] = useState(false);
+  const [educationLoaded, setEducationLoaded] = useState(false);
+
   const fetchPortfolioItems = async () => {
     try {
       const response = await fetch('/api/getPortfolioItems');
@@ -54,48 +65,51 @@ export default function Profile() {
       }
     } catch (error) {
       toast.error('An error occurred while fetching portfolio items.');
+    } finally {
+      setPortfolioLoaded(true);
     }
   };
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/');
+      router.push('/')
     } else if (status === 'authenticated' && session?.user) {
-      fetchProfileData();
-      fetchPortfolioItems();
-      fetchSkills();
-      fetchExperienceItems();
-      fetchEducationItems();
+      fetchProfileData()
     }
-  }, [status, session, router]);
+  }, [status, session, router])
 
   const fetchProfileData = async () => {
     try {
-      const response = await fetch('/api/getUser');
-      const data = await response.json();
-
-      console.log(data.socialLinks);
-
+      const response = await fetch('/api/getUser')
+      const data = await response.json()
 
       if (response.ok) {
-        setProfileData({
-          username: data.username,
-          fullName: data.name,
-          profession: data.profession,
-          description: data.description || '',
-          profile_image: data.profile_image || '',
-          socialLinks: data.socialLinks || ''
-        });
-        setIsEditing(!data.profession); // Set editing mode if profession is not set
+        if (!data.profession) {
+          // If the user doesn't have a profession set, redirect to the first-time setup page
+          router.push('/edit/start')
+        } else {
+          setProfileData({
+            username: data.username,
+            fullName: data.name,
+            profession: data.profession,
+            description: data.description || '',
+            profile_image: data.profile_image || '',
+            socialLinks: data.socialLinks || []
+          })
+          setProfileLoaded(true);
+          fetchPortfolioItems()
+          fetchSkills()
+          fetchExperienceItems()
+          fetchEducationItems()
+        }
       } else {
-        toast.error('Failed to load profile data');
+        toast.error('Failed to load profile data')
       }
     } catch (error) {
-      console.error('Error fetching profile data:', error);
-      toast.error('An error occurred while loading profile data.');
+      console.error('Error fetching profile data:', error)
+      toast.error('An error occurred while loading profile data.')
     }
-  };
-
+  }
 
   const handleEditComplete = () => {
     setIsEditing(false);
@@ -115,6 +129,8 @@ export default function Profile() {
     } catch (error) {
       console.error('Error fetching skills:', error);
       toast.error('An error occurred while loading skills.');
+    } finally {
+      setSkillsLoaded(true);
     }
   };
 
@@ -131,6 +147,8 @@ export default function Profile() {
     } catch (error) {
       console.error('Error fetching experience items:', error);
       toast.error('An error occurred while loading experience items.');
+    } finally {
+      setExperienceLoaded(true);
     }
   };
 
@@ -147,11 +165,23 @@ export default function Profile() {
     } catch (error) {
       console.error('Error fetching education items:', error);
       toast.error('An error occurred while loading education items.');
+    } finally {
+      setEducationLoaded(true);
     }
   };
 
-  if (status === 'loading') {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  useEffect(() => {
+    if (profileLoaded && portfolioLoaded && skillsLoaded && experienceLoaded && educationLoaded) {
+      setIsLoading(false);
+    }
+  }, [profileLoaded, portfolioLoaded, skillsLoaded, experienceLoaded, educationLoaded]);
+
+  if (status === 'loading' || isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
   }
 
   return (
@@ -169,13 +199,29 @@ export default function Profile() {
           <EditProfile funcion={handleEditComplete} />
         </>
       ) : (
-        <div className="">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <section className='pt-6'>
             <div>
               <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-8 lg:items-center">
                 {/* Profile info */}
-                <div className="flex flex-col lg:flex-row items-center gap-6 lg:col-span-9">
-                  <img src={profileData.profile_image} alt={profileData.fullName} className="w-full h-auto lg:w-[19rem] lg:h-[19rem] 2xl:w-[21rem] 2xl:h-[21rem] rounded-3xl object-cover" />
+                <motion.div
+                  className="flex flex-col lg:flex-row items-center gap-6 lg:col-span-9"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <img 
+                    src={profileData.profile_image} 
+                    alt={profileData.fullName} 
+                    className="
+                      w-full h-auto border-4 border-gray-200/20 lg:w-[19rem] 
+                      lg:h-[19rem] 2xl:w-[21rem] 2xl:h-[21rem] rounded-3xl object-cover
+                    " 
+                  />
                   <div className="text-center sm:text-left">
                     <h1 className='text-4xl sm:text-3xl lg:text-4xl font-semibold'>
                       {profileData.fullName}
@@ -185,13 +231,18 @@ export default function Profile() {
                     </p>
                     <p className="text-base sm:text-lg text-text">{profileData.description}</p>
                   </div>
-                </div>
+                </motion.div>
                 {/* Social media and contact */}
-                <div className="lg:col-span-3 text-title">
+                <motion.div
+                  className="lg:col-span-3 text-title"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
                   <div className="w-full lg:max-w-md mx-auto lg:mx-0 rounded-lg shadow-lg overflow-hidden lg:p-4">
-                    <h2 className="text-xl font-medium  hidden lg:flex">Contact</h2>
+                    <h2 className="text-xl font-medium hidden lg:flex">Contact</h2>
                     <div className="flex flex-col flex-wrap gap-8 lg:flex-row justify-between items-center mb-4">
-                      <div className="flex space-x-4 w-full justify-around lg:w-fit mt-8 mb-2">
+                      <div className="flex space-x-4 w-full justify-around lg:w-fit mt-8">
                         {
                           profileData.socialLinks.map((link: any, i) => {
                             if (link.link) {
@@ -245,15 +296,6 @@ export default function Profile() {
                                       </svg>
                                     </Link>
                                   )
-                                case "Instagram":
-                                  return (
-                                    <Link href={link.link} target='_blank' className="w-8 h-8 lg:w-6 lg:h-6" key={i}>
-                                      <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                                      </svg>
-                                    </Link>
-                                  )
-
                                 default: return (
                                   <Link href={link.link} target='_blank' className="w-8 h-8 lg:w-6 lg:h-6" key={i}>
                                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -272,34 +314,39 @@ export default function Profile() {
                           })
                         }
                       </div>
-                      <ShareModal username={profileData.username}/>
-                      {/* <button className="px-4 py-3 border-2 border-gray-200/30 rounded-xl w-full text-base">
-                        Share
-                      </button> */}
+                      <ShareModal username={profileData.username} />
                     </div>
-                    {/* <button className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition-colors">
-                      Contact
-                    </button> */}
                   </div>
-                </div>
+                </motion.div>
               </div>
             </div>
           </section>
 
-          <hr className='border-t-[3px] border-gray-400/10 my-8' />
+          <hr className='border-t-[3px] border-gray-100/10 my-8' />
 
-          <section className='grid lg:grid-cols-3 divide-x divide-gray-50/5 gap-2 bg-[#f0f0f002] text-text lg:py-5 lg:px-2 border-2 border-gray-200/20 rounded-3xl'>
+          <motion.section
+            className='grid lg:grid-cols-3 lg:divide-x-[2.3px] lg:divide-y-0 divide-y-2 divide-gray-100/10 gap-2 text-text lg:py-5 lg:px-2 rounded-3xl'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             {/* Nueva sección de experiencia */}
             <section className='p-6'>
               <div className='flex justify-between items-center mb-4'>
                 <h3 className='text-2xl font-semibold'>{experienceSectionName}</h3>
               </div>
               <div className="flex flex-col gap-3">
-                {experienceItems.map((item) => (
-                  <div key={item.id} className='rounded'>
+                {experienceItems.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    className='rounded'
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
                     <h3 className='text-lg font-medium'>{item.title}</h3>
                     <p className='text-gray-200/70'>{item.description}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </section>
@@ -309,11 +356,17 @@ export default function Profile() {
                 <h2 className='text-2xl font-semibold'>{educationSectionName}</h2>
               </div>
               <div className="flex flex-col gap-3">
-                {educationItems.map((item) => (
-                  <div key={item.id} className='rounded'>
+                {educationItems.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    className='rounded'
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
                     <h3 className='text-lg font-medium'>{item.title}</h3>
                     <p className='text-gray-200/70'>{item.description}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </section>
@@ -321,45 +374,57 @@ export default function Profile() {
             <section className='p-6'>
               <h2 className='text-2xl font-semibold mb-4'>Skills</h2>
               <div className='flex flex-wrap gap-3 gap-y-4'>
-                {skills.map((skill) => (
-                  <div key={skill.id} className='bg-blue-800/10 ring-2 ring-blue-100/30 text-text px-3 py-1 rounded-full flex items-center'>
+                {skills.map((skill, index) => (
+                  <motion.div
+                    key={skill.id}
+                    className='bg-[#191D20] ring-2 ring-blue-100/30 text-text px-3 py-1 rounded-full flex items-center'
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                  >
                     <span>{skill.skill_name}</span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </section>
-          </section>
-
+          </motion.section>
 
           {/* Seccion de proyectos */}
-          <hr className='border-t-[3px] border-gray-400/10 my-8' />
-          <div className="grid gap-6">
+          <hr className='border-t-[3px] border-gray-100/10 my-8' />
+          <motion.div
+            className="grid gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
             <div className="flex items-center justify-between">
               <h4 className='fadeIn text-3xl md:text-2xl font-semibold text-center md:text-start'>
                 Projects
               </h4>
               <div className="">
-                {/* <Link href={"/profile/projects"}>
-                  <button className='bg-secondary border-2 border-gray-300/20 py-3 px-6 rounded-2xl text-title font-semibold'>
-                    Add project
-                  </button>
-                </Link> */}
+                {/* Add project button removed as per your comment */}
               </div>
             </div>
             <div className="projectList grid md:grid-cols-3 gap-7">
-              {portfolioItems.map((item: any) => (
-                <Project
+              {portfolioItems.map((item: any, index: number) => (
+                <motion.div
                   key={item.id}
-                  imgBg={item.image_url || ''}  // Assuming your API provides image_url
-                  title={item.portfolio_name}
-                  description={item.description || ''}
-                  bgColor={item.color || '#000'}  // Assuming there's a color field
-                  projectUrl={item.link || '#'}  // Assuming project link
-                />
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <Project
+                    imgBg={item.image_url || ''}
+                    title={item.portfolio_name}
+                    description={item.description || ''}
+                    bgColor={item.color || '#000'}
+                    projectUrl={item.link || '#'}
+                  />
+                </motion.div>
               ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );

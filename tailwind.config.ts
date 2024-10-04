@@ -19,7 +19,7 @@ const config: Config = {
   			title: '#F4F4F4',
   			text: '#e5e7ebf2',
   			input: '#151720',
-  			background: '#07070E',
+  			background: '#121315',
   			foreground: '#141618',
   			primary: '#0A84FF',
   			secondary: '#191D20',
