@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -24,11 +25,11 @@ const Login = () => {
         try {
             const result = await signIn('google', { callbackUrl: '/profile' });
             if (result?.error) {
-                toast.error('Failed to sign in with Google.');
+                toast.error('Failed to sign in with Google. Please try again.');
             }
         } catch (error) {
             console.error('Error signing in:', error);
-            toast.error('An unexpected error occurred. Please try again.');
+            toast.error('An unexpected error occurred. Please try again later.');
         } finally {
             setIsLoading(false);
         }
@@ -36,8 +37,9 @@ const Login = () => {
 
     if (status === 'loading') {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                Loading...
+            <div className="flex items-center justify-center min-h-screen bg-background text-title">
+                <ArrowPathIcon className="w-8 h-8 animate-spin" />
+                <span className="ml-2 text-lg">Loading your session...</span>
             </div>
         );
     }
@@ -45,53 +47,90 @@ const Login = () => {
     return (
         <>
             <Head>
-                <title>Sign in with Google - Geek Guys Studio</title>
+                <title>Sign in to Portfolio GG - Geek Guys Studio</title>
+                <meta name="description" content="Access your Portfolio GG account. Create and showcase your professional portfolio with ease." />
             </Head>
-            <Toaster />
-            <main className={`bg-background text-title`}>
-                <section>
-                    <div className="gap-0 md:min-h-screen relative flex">
-                        <div className="lg:w-2/5 relative w-full hidden md:flex lg:justify-end px-4 bg-[#121212]">
-                            <div className="absolute top-0 left-0 w-full h-full shadow-[inset_0_20px_40px_#f0f0f030] z-0 animate-[diagonalScroll_25s_linear_infinite]"
-                                style={{
-                                    mixBlendMode: 'soft-light',
-                                    background: 'url("/gg-studio-logo.svg") repeat',
-                                    backgroundSize: '120px 77px',
-                                    backgroundPosition: '0 0',
-                                }}
-                            >
-                            </div>
+            <Toaster 
+                position="top-center"
+                toastOptions={{
+                    duration: 5000,
+                    style: {
+                        background: '#333',
+                        color: '#fff',
+                    },
+                }}
+            />
+            <main className="bg-background text-title min-h-screen">
+                <section className="flex flex-col md:flex-row h-screen">
+                    {/* Left side - Decorative area */}
+                    <div className="hidden md:flex md:w-2/5 bg-[#121212] relative overflow-hidden">
+                        <div 
+                            className="absolute inset-0 z-0 animate-[diagonalScroll_25s_linear_infinite]"
+                            style={{
+                                mixBlendMode: 'soft-light',
+                                background: 'url("/gg-studio-logo.svg") repeat',
+                                backgroundSize: '120px 77px',
+                                backgroundPosition: '0 0',
+                            }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#121212] z-10" />
+                        <div className="absolute bottom-10 left-10 z-20 text-white">
+                            <h2 className="text-2xl font-bold mb-2">Portfolio GG</h2>
+                            <p className="text-sm opacity-75">Showcase your skills. Build your future.</p>
                         </div>
-                        <div className="lg:w-1/2 lg:flex justify-start min-h-[85dvh] pt-36 lg:pt-24 2xl:pt-32 px-4 lg:px-8 2xl:px-0 pb-24">
-                            <div className="overflow-hidden 2xl:max-w-6xl max-w-2xl w-full flex items-center">
-                                <div className="py-8 px-4 mx-auto max-w-3xl">
-                                    <div className="mb-6">
-                                        <div className="text-4xl font-semibold mb-4">
-                                            Welcome to Portfolio GG
-                                        </div>
-                                        <h1 className="text-gray-300">
-                                            Sign in with Google to access our awesome services
-                                        </h1>
-                                    </div>
-                                    <motion.button
-                                        onClick={handleLogin}
-                                        disabled={isLoading}
-                                        className="w-full px-4 py-4 bg-white text-black rounded-xl shadow-md hover:bg-blue-50"
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                                    >
-                                        {isLoading ? (
-                                            <ArrowPathIcon width={30} className="animate-spin" />
-                                        ) : (
-                                            <div className="flex gap-2 items-center justify-center">
-                                                <Image src="/google.png" alt="Google logo" width={24} height={24} />
-                                                Sign in with Google
-                                            </div>
-                                        )}
-                                    </motion.button>
-                                </div>
+                    </div>
+
+                    {/* Right side - Login form */}
+                    <div className="flex-1 flex items-center bg-gray-100/5 justify-center px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-md w-full space-y-8">
+                            <div>
+                                <Image 
+                                    src="/gg-studio-logo.svg" 
+                                    alt="Geek Guys Studio Logo" 
+                                    width={80} 
+                                    height={80} 
+                                    className="mx-auto h-20 w-auto rotate-12"
+                                />
+                                <h1 className="mt-6 text-center text-3xl font-extrabold">
+                                    Welcome to Portfolio GG
+                                </h1>
+                                <p className="mt-2 text-center text-sm text-gray-300">
+                                    Sign in with Google to create and manage your professional portfolio
+                                </p>
                             </div>
+                            <motion.button
+                                onClick={handleLogin}
+                                disabled={isLoading}
+                                className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-medium rounded-2xl text-black bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <ArrowPathIcon className="animate-spin h-5 w-5 mr-3" />
+                                        Signing in...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Image src="/google.png" alt="Google logo" width={20} height={20} className="mr-2" />
+                                        Sign in with Google
+                                    </>
+                                )}
+                            </motion.button>
+                            <p className="mt-2 text-center text-xs text-gray-400">
+                                By signing in, you agree to our{' '}
+                                <a href="#" className="font-medium text-blue-400 hover:text-blue-300">
+                                    Terms of Service
+                                </a>{' '}
+                                and{' '}
+                                <a href="#" className="font-medium text-blue-400 hover:text-blue-300">
+                                    Privacy Policy
+                                </a>
+                            </p>
+                            <p className="mt-2 text-center text-base text-gray-400">
+                                By <strong className='text-[#725cf7] underline'> <Link target='_blank' href="https://www.geekguysstudio.com/es"> Geek Guys Studio</Link></strong> 
+                            </p>
                         </div>
                     </div>
                 </section>

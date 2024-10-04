@@ -227,25 +227,17 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                         {({ remove, push }) => (
                                             <div>
                                                 {values.socialLinks.map((_, index) => (
-                                                    <div key={index} className="flex items-center space-x-2 mb-2">
+                                                    <div key={index} className="flex flex-wrap items-center gap-2 mb-2">
                                                         <Field
                                                             as="select"
                                                             name={`socialLinks.${index}.platform`}
-                                                            className="flex-1 px-3 py-2 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                            className="flex-1 px-3 py-2 rounded-lg lg:max-w-fit bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                                         >
                                                             <option value="">Select Platform</option>
                                                             {socialPlatforms.map((platform) => (
                                                                 <option key={platform} value={platform}>{platform}</option>
                                                             ))}
                                                         </Field>
-                                                        {/* {values.socialLinks[index].platform === 'Other' && (
-                                                            <Field
-                                                                name={`socialLinks.${index}.customPlatform`}
-                                                                type="text"
-                                                                placeholder="Custom Platform"
-                                                                className="flex-1 px-3 py-2 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                                            />
-                                                        )} */}
                                                         <Field
                                                             name={`socialLinks.${index}.link`}
                                                             type="text"
@@ -255,7 +247,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                                         <button
                                                             type="button"
                                                             onClick={() => remove(index)}
-                                                            className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                                            className="p-3 bg-red-500 h-full text-white rounded-lg hover:bg-red-600"
                                                         >
                                                             <TrashIcon size={16} />
                                                         </button>
