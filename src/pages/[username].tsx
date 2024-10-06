@@ -86,11 +86,25 @@ interface PublicProfileProps {
 }
 
 export default function PublicProfile({ profileData }: PublicProfileProps) {
+    const pageTitle = `${profileData.name} - ${profileData.profession} | Portfoliogg`;
+    const pageDescription = `Check out ${profileData.name}'s professional portfolio. ${profileData.description}`;
+    const canonicalUrl = `https://www.portfoliogg.com/${profileData.username}`;
+
     return (
         <ClientSideWrapper profileData={profileData}>
             <Head>
-                <title>{profileData.name} - Portfolio</title>
-                <meta name="description" content={`${profileData.name}'s professional portfolio`} />
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+                <link rel="canonical" href={canonicalUrl} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={pageDescription} />
+                <meta property="og:url" content={canonicalUrl} />
+                <meta property="og:type" content="profile" />
+                <meta property="og:image" content={profileData.profile_image} />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={pageTitle} />
+                <meta name="twitter:description" content={pageDescription} />
+                <meta name="twitter:image" content={profileData.profile_image} />
             </Head>
 
             <section className='pt-6'>

@@ -618,13 +618,13 @@ export default function EditProfile() {
                             </div>
                             <div className="space-x-3 flex">
                                 <button
-                                    onClick={() => handleDeleteItem('experience', item.id)}
+                                    onClick={() => handleDeleteItem('education', item.id)}
                                     className="bg-red-600 rounded-full flex items-center justify-center text-white p-3 hover:scale-105 duration-150 w-12 h-12 shadow-lg border-2 border-gray-100/30"
                                 >
                                     <Trash2Icon width={20} />
                                 </button>
                                 <button
-                                    onClick={() => openEditModal('experience', item)}
+                                    onClick={() => openEditModal('education', item)}
                                     className="bg-secondary rounded-full flex items-center justify-center text-white p-3 hover:scale-105 duration-150 w-12 h-12 shadow-lg border-2 border-gray-100/30"
                                 >
                                     <PenIcon width={20} />
