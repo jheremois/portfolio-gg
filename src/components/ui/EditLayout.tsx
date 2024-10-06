@@ -23,8 +23,8 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
 
     const steps: Step[] = [
         {
-          title: "Welcome! Let's customize your profile",
-          description: `
+            title: "Welcome! Let's customize your profile",
+            description: `
           <div class="space-y-4 text-gray-300">
             <p class="mb-4">Get started by updating your profile with key information:</p>
             <ol class="list-decimal pl-6 space-y-4">
@@ -38,11 +38,11 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
             <p class="mt-6">Click <strong>Update Profile</strong> when you're ready to save your changes.</p>
           </div>
           `,
-          image: "https://storage.googleapis.com/portfoliprofiles/gettoknowgg/welcome-to-edit-profile-portfolio-gg.png"
+            image: "https://storage.googleapis.com/portfoliprofiles/gettoknowgg/welcome-to-edit-profile-portfolio-gg.png"
         },
         {
-          title: "Details Section",
-          description: `
+            title: "Details Section",
+            description: `
           <div class="space-y-4 text-gray-300">
             <p class="mb-4">Customize important details about yourself or your brand:</p>
             <ol class="list-decimal pl-6 space-y-4">
@@ -53,11 +53,11 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
             <p class="mt-6">Once you're done, your profile will better showcase your expertise.</p>
           </div>
           `,
-          image: "https://storage.googleapis.com/portfoliprofiles/gettoknowgg/profile%20details%20portfolio%20plus.png"
+            image: "https://storage.googleapis.com/portfoliprofiles/gettoknowgg/profile%20details%20portfolio%20plus.png"
         },
         {
-          title: "Projects Section",
-          description: `
+            title: "Projects Section",
+            description: `
           <div class="space-y-4 text-gray-300">
             <p class="mb-4">Manage your portfolio easily with these options:</p>
             <ol class="list-decimal pl-6 space-y-4">
@@ -69,11 +69,11 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
             <p class="mt-6">Keep your portfolio fresh by regularly adding and updating your projects.</p>
           </div>
           `,
-          image: "https://storage.googleapis.com/portfoliprofiles/gettoknowgg/edit%20portfolio%20list%20portfolio%20gg.png"
+            image: "https://storage.googleapis.com/portfoliprofiles/gettoknowgg/edit%20portfolio%20list%20portfolio%20gg.png"
         },
         {
-          title: "You're All Set! Share your profile",
-          description: `
+            title: "You're All Set! Share your profile",
+            description: `
           <div class="space-y-4 text-gray-300">
             <p class="mb-4"><strong>Congratulations!</strong> Your profile is ready to share with the world.</p>
             <ol class="list-decimal pl-6 space-y-4">
@@ -84,9 +84,9 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
             <p class="mt-6">Keep updating your profile as you grow and complete new projects.</p>
           </div>
           `,
-          video: "https://www.youtube.com/embed/gmmPmnKFsTQ"
+            video: "https://www.youtube.com/embed/gmmPmnKFsTQ"
         },
-      ];
+    ];
 
     const handleNext = () => {
         if (step < steps.length) {
@@ -237,11 +237,11 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
 
     return (
         <>
-        <SEOMetadata
-        title="Portfoliogg - Create Your Professional Portfolio"
-        description="Portfoliogg is a user-friendly platform for creating and sharing professional portfolios. Showcase your skills, projects, and achievements with ease."
-        canonicalUrl="https://portfolio-gg-eta.vercel.app/"
-      />
+            <SEOMetadata
+                title="Portfoliogg - Create Your Professional Portfolio"
+                description="Portfoliogg is a user-friendly platform for creating and sharing professional portfolios. Showcase your skills, projects, and achievements with ease."
+                canonicalUrl="https://portfolio-gg-eta.vercel.app/"
+            />
             <div className="flex min-h-screen">
                 {showWalkthrough && <FirstTimeWalkthrough onComplete={handleWalkthroughComplete} />}
 
@@ -267,7 +267,21 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                                 <div className="h-4 w-1/2 bg-gray-300 rounded"></div>
                             </div>
                         ) : error ? (
-                            <p className="text-red-500">Error: {error}</p>
+                            <>
+                                <p className="text-red-500">Error: {error}</p>
+                                <button
+                                    onClick={handleLogout}
+                                    className='
+                                        flex items-center gap-1 bg-gray-900/30 p-3 
+                                        py-2 rounded-xl border-2 border-white/20
+                                    '
+                                >
+                                    Log out
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+                                    </svg>
+                                </button>
+                            </>
                         ) : userData ? (
                             <div className="">
                                 <div className="flex flex-col gap-2">
@@ -333,7 +347,21 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                                 </div>
                             </div>
                         ) : (
-                            <p className="text-gray-300">User not found</p>
+                            <>
+                                <p className="text-gray-300">User not found</p>
+                                <button
+                                        onClick={handleLogout}
+                                        className='
+                                            flex items-center gap-1 bg-gray-900/30 p-3 
+                                            py-2 rounded-xl border-2 border-white/20
+                                        '
+                                    >
+                                        Log out
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+                                        </svg>
+                                    </button>
+                            </>
                         )}
                     </div>
                     <hr className='my-8 border-t-2 border-gray-200/40' />
