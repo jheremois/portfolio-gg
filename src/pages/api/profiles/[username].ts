@@ -8,11 +8,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  if (!username || typeof username !== 'string') {
+    return res.status(400).json({ error: 'Invalid username parameter' });
+  }
+
   try {
     // Fetch user data
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('id, username, name, profession, description, profile_image, experience_section_name, education_section_name')
+      .select(`
+        id, 
+        username, 
+        name, 
+        profession, 
+        description, 
+        profile_image, 
+        experience_section_name, 
+        education_section_name,
+        skills_section_name,
+        projects_section_name
+      `)
       .eq('username', username)
       .single();
 
@@ -79,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       skills: skills || [],
       experienceItems: experienceItems || [],
       educationItems: educationItems || [],
-    };
+    };  
 
     return res.status(200).json(profileData);
   } catch (error) {

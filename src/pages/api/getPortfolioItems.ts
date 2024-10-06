@@ -1,8 +1,9 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { supabase } from '@/supabaseClient';
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Ensure only authenticated users can access this API
   const session = await getServerSession(req, res, authOptions);
 
@@ -13,15 +14,16 @@ export default async function handler(req: any, res: any) {
   // Fetch the user from the Supabase database
   const { data: userData, error: userError } = await supabase
     .from('users')
-    .select('id') // Only need the user's ID to query the portfolio items
+    .select('id, projects_section_name') // Include projects_section_name
     .eq('email', session.user.email)
-    .maybeSingle();
+    .single();
 
   if (userError || !userData) {
     return res.status(500).json({ error: 'Failed to retrieve user data' });
   }
 
   const userId = userData.id;
+  const projectsSectionName = userData.projects_section_name || 'Projects'; // Default to 'Projects' if not set
 
   // Query all portfolio items that belong to this user
   const { data: portfolioItems, error: portfolioError } = await supabase
@@ -33,6 +35,9 @@ export default async function handler(req: any, res: any) {
     return res.status(500).json({ error: 'Failed to fetch portfolio items' });
   }
 
-  // Return the portfolio items in the response
-  return res.status(200).json({ portfolioItems });
+  // Return the portfolio items and projects section name in the response
+  return res.status(200).json({ 
+    portfolioItems, 
+    projectsSectionName 
+  });
 }

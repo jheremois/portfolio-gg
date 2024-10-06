@@ -25,6 +25,7 @@ interface UserData {
     educationItems: SectionItem[]
     experienceSectionName: string
     educationSectionName: string
+    skillsSectionName: string
 }
 
 interface EditModalState {
@@ -35,7 +36,7 @@ interface EditModalState {
 
 interface SectionNameModalState {
     isOpen: boolean
-    type: 'experience' | 'education' | null
+    type: 'experience' | 'education' | 'skills' | null
 }
 
 interface FormErrors {
@@ -93,7 +94,8 @@ export default function EditProfile() {
                     experienceItems: data.experienceItems || [],
                     educationItems: data.educationItems || [],
                     experienceSectionName: data.experience_section_name || 'Experience',
-                    educationSectionName: data.education_section_name || 'Education'
+                    educationSectionName: data.education_section_name || 'Education',
+                    skillsSectionName: data.skills_section_name || 'Skills'
                 })
             } else {
                 toast.error('Failed to load user data')
@@ -338,7 +340,7 @@ export default function EditProfile() {
         return true
     }
 
-    const handleUpdateSectionName = async (section: 'experience' | 'education', newName: string) => {
+    const handleUpdateSectionName = async (section: 'experience' | 'education' | 'skills', newName: string) => {
         if (!validateSectionName(newName)) return
 
         try {
@@ -354,7 +356,8 @@ export default function EditProfile() {
             if (response.ok) {
                 setUserData(prevData => ({
                     ...prevData!,
-                    [section === 'experience' ? 'experienceSectionName' : 'educationSectionName']: newName
+                    [section === 'experience' ? 'experienceSectionName' : 
+                     section === 'education' ? 'educationSectionName' : 'skillsSectionName']: newName
                 }))
                 toast.success(`${section} section name updated successfully`)
                 setSectionNameModalState({ isOpen: false, type: null })
@@ -372,9 +375,13 @@ export default function EditProfile() {
         setEditedItem(item)
     }
 
-    const openSectionNameModal = (type: 'experience' | 'education') => {
+    const openSectionNameModal = (type: 'experience' | 'education' | 'skills') => {
         setSectionNameModalState({ isOpen: true, type })
-        setNewSectionName(type === 'experience' ? userData?.experienceSectionName || '' : userData?.educationSectionName || '')
+        setNewSectionName(
+            type === 'experience' ? userData?.experienceSectionName || '' : 
+            type === 'education' ? userData?.educationSectionName || '' :
+            userData?.skillsSectionName || ''
+        )
     }
 
     const toggleExperienceForm = () => {
@@ -433,7 +440,18 @@ export default function EditProfile() {
             <div className="max-w-4xl mx-auto px-4 py-12 text-text">
                 <h1 className="text-3xl font-bold mb-8">Edit Profile Details</h1>
                 <section className="my-8 px-1">
-                    <h2 className="text-2xl font-semibold mb-4">Skills ({userData?.skills.length}/{MAX_SKILLS})</h2>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-2xl font-semibold mb-4">{userData!.skillsSectionName} ({userData?.skills.length}/{MAX_SKILLS})</h2>
+                        <button
+                            onClick={() => openSectionNameModal('skills')}
+                            className="text-blue-500 hover:text-blue-700 flex items-center gap-3"
+                        >
+                            <div className="bg-black border-border border w-8 h-8 p-0 flex justify-center items-center rounded-full">
+                                <PenIcon width={13}/>
+                            </div>
+                            Edit Section Name
+                        </button>
+                    </div>
                     <form onSubmit={handleAddSkill} className="mb-4">
                         <div className="flex gap-2 items-center">
                             <input
@@ -488,8 +506,11 @@ export default function EditProfile() {
                         <h2 className="text-2xl font-semibold">{userData!.experienceSectionName} ({userData!.experienceItems.length}/{MAX_ITEMS})</h2>
                         <button
                             onClick={() => openSectionNameModal('experience')}
-                            className="text-blue-500 hover:text-blue-700"
+                            className="text-blue-500 hover:text-blue-700 flex items-center gap-3"
                         >
+                            <div className="bg-black border-border border w-8 h-8 p-0 flex justify-center items-center rounded-full">
+                                <PenIcon width={13}/>
+                            </div>
                             Edit Section Name
                         </button>
                     </div>
@@ -580,8 +601,11 @@ export default function EditProfile() {
                         <h2 className="text-2xl font-semibold">{userData!.educationSectionName} ({userData!.educationItems.length}/{MAX_ITEMS})</h2>
                         <button
                             onClick={() => openSectionNameModal('education')}
-                            className="text-blue-500 hover:text-blue-700"
+                            className="text-blue-500 hover:text-blue-700 flex items-center gap-3"
                         >
+                            <div className="bg-black border-border border w-8 h-8 p-0 flex justify-center items-center rounded-full">
+                                <PenIcon width={13}/>
+                            </div>
                             Edit Section Name
                         </button>
                     </div>

@@ -35,7 +35,11 @@ export default function Profile() {
     profession: '',
     description: '',
     profile_image: '',
-    socialLinks: [{}]
+    socialLinks: [{}],
+    skills_section_name: "Skills",
+    projects_section_name: "Portfolio",
+    education_section_name: "Education",
+    experience_section_name: "Experience"
   });
   const [portfolioItems, setPortfolioItems] = useState([]);
 
@@ -43,8 +47,6 @@ export default function Profile() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [experienceItems, setExperienceItems] = useState<SectionItem[]>([]);
   const [educationItems, setEducationItems] = useState<SectionItem[]>([]);
-  const [experienceSectionName, setExperienceSectionName] = useState('Experience');
-  const [educationSectionName, setEducationSectionName] = useState('Education');
 
   // New loading states
   const [isLoading, setIsLoading] = useState(true);
@@ -91,10 +93,12 @@ export default function Profile() {
             profession: data.profession,
             description: data.description || '',
             profile_image: data.profile_image || '',
-            socialLinks: data.socialLinks || []
+            socialLinks: data.socialLinks || [],
+            skills_section_name: data.skills_section_name,
+            projects_section_name: data.projects_section_name,
+            education_section_name: data.education_section_name,
+            experience_section_name: data.experience_section_name
           })
-          setEducationSectionName(data.education_section_name)
-          setExperienceSectionName(data.experience_section_name)
           setSkills(data.skills);
           setProfileLoaded(true);
           setEducationItems(data.educationItems);
@@ -117,9 +121,9 @@ export default function Profile() {
 
   useEffect(() => {
     if (
-        profileLoaded && 
-        portfolioLoaded
-      ) {
+      profileLoaded &&
+      portfolioLoaded
+    ) {
       setIsLoading(false);
     }
   }, [profileLoaded, portfolioLoaded]);
@@ -242,7 +246,7 @@ export default function Profile() {
                                   return (
                                     <Link href={link.link} target='_blank' className="w-8 h-8 lg:w-6 lg:h-6" key={i}>
                                       <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                                        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
                                       </svg>
                                     </Link>
                                   )
@@ -310,7 +314,7 @@ export default function Profile() {
             {/* Nueva sección de experiencia */}
             <section className='p-6'>
               <div className='flex justify-between items-center mb-4'>
-                <h3 className='text-2xl font-semibold'>{experienceSectionName}</h3>
+                <h3 className='text-2xl font-semibold'>{profileData.experience_section_name}</h3>
               </div>
               <div className="flex flex-col gap-3">
                 {experienceItems.map((item, index) => (
@@ -330,7 +334,7 @@ export default function Profile() {
             {/* Nueva sección de educación */}
             <section className='p-6'>
               <div className='flex justify-between items-center mb-4'>
-                <h2 className='text-2xl font-semibold'>{educationSectionName}</h2>
+                <h2 className='text-2xl font-semibold'>{profileData.education_section_name}</h2>
               </div>
               <div className="flex flex-col gap-3">
                 {educationItems.map((item, index) => (
@@ -349,7 +353,9 @@ export default function Profile() {
             </section>
             {/* Nueva sección de habilidades */}
             <section className='p-6'>
-              <h2 className='text-2xl font-semibold mb-4'>Skills</h2>
+              <div className='flex justify-between items-center mb-4'>
+                <h2 className='text-2xl font-semibold'>{profileData.skills_section_name}</h2>
+              </div>
               <div className='flex flex-wrap gap-3 gap-y-4'>
                 {skills.map((skill, index) => (
                   <motion.div
@@ -376,7 +382,7 @@ export default function Profile() {
           >
             <div className="flex items-center justify-between">
               <h4 className='fadeIn text-3xl md:text-2xl font-semibold text-center md:text-start'>
-                Projects
+                {profileData.projects_section_name}
               </h4>
               <div className="">
                 {/* Add project button removed as per your comment */}

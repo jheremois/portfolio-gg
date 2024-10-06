@@ -149,11 +149,11 @@ const Login = () => {
                             </motion.button>
                             <p className="mt-2 text-center text-xs text-gray-400">
                                 By signing in, you agree to our{' '}
-                                <a href="#" className="font-medium text-blue-400 hover:text-blue-300">
+                                <a target='_blank' href="/terms-of-service" className="font-medium text-blue-400 hover:text-blue-300">
                                     Terms of Service
                                 </a>{' '}
                                 and{' '}
-                                <a href="#" className="font-medium text-blue-400 hover:text-blue-300">
+                                <a target='_blank' href="/privacy-policy" className="font-medium text-blue-400 hover:text-blue-300">
                                     Privacy Policy
                                 </a>
                             </p>

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { ArrowDownLeftIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface ProjectProperties {
@@ -75,12 +75,14 @@ const Project = (prjct: ProjectProperties) => {
                                 </div>
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200"
+                                    className="absolute top-4 right-4 p-2 rounded-full bg-black/60 hover:bg-black transition-colors duration-200"
                                 >
                                     <XMarkIcon className="w-6 h-6 text-white" />
                                 </button>
                                 <div className="p-4 sm:p-6">
-                                    <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">{prjct.title}</h2>
+                                    <DialogTitle className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">
+                                            {prjct.title}
+                                    </DialogTitle>
                                     <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6">{prjct.description}</p>
                                     <div className="flex justify-end">
                                         <Link
