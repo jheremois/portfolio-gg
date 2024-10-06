@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { Eye, Edit2 } from 'lucide-react'
+import SEOMetadata from './SeoMetadata';
 
 interface FloatingNavLayoutProps {
   children: React.ReactNode;
@@ -46,32 +47,39 @@ export default function FloatingNavLayout({ children, showNav = true }: Floating
     }
 
     return (
-        <div className="min-h-screen">
-            {showNav && (
-                <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-sidebar border-2 border-border shadow-lg rounded-full p-2">
-                    <div className="flex items-center space-x-1">
-                        {navItems.map((item) => (
-                            <Link key={item.path} href={item.path}>
-                                <span
-                                    className={`flex items-center px-4 py-2 rounded-full transition-all duration-300 ${
-                                        isActive(item.path)
-                                            ? 'bg-blue-600 text-white shadow-md'
-                                            : 'text-gray-600 hover:bg-background'
-                                    }`}
-                                    onClick={() => handleNavClick(item.path)}
-                                >
-                                    <item.icon className="h-5 w-5" aria-hidden="true" />
-                                    <span className="ml-2 font-medium">{item.name}</span>
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
-                </nav>
-            )}
+        <>
+        <SEOMetadata
+        title="Portfoliogg - Create Your Professional Portfolio"
+        description="Portfoliogg is a user-friendly platform for creating and sharing professional portfolios. Showcase your skills, projects, and achievements with ease."
+        canonicalUrl="https://portfolio-gg-eta.vercel.app/"
+      />
+            <div className="min-h-screen">
+                {showNav && (
+                    <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-sidebar border-2 border-border shadow-lg rounded-full p-2">
+                        <div className="flex items-center space-x-1">
+                            {navItems.map((item) => (
+                                <Link key={item.path} href={item.path}>
+                                    <span
+                                        className={`flex items-center px-4 py-2 rounded-full transition-all duration-300 ${
+                                            isActive(item.path)
+                                                ? 'bg-blue-600 text-white shadow-md'
+                                                : 'text-gray-600 hover:bg-background'
+                                        }`}
+                                        onClick={() => handleNavClick(item.path)}
+                                    >
+                                        <item.icon className="h-5 w-5" aria-hidden="true" />
+                                        <span className="ml-2 font-medium">{item.name}</span>
+                                    </span>
+                                </Link>
+                            ))}
+                        </div>
+                    </nav>
+                )}
 
-            <main>
-                {children}
-            </main>
-        </div>
+                <main>
+                    {children}
+                </main>
+            </div>
+        </>
     )
 }
