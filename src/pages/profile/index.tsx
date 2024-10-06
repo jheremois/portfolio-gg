@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Project from '@/components/Project';
 import ShareModal from '@/components/Sharemodal';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 // Definimos las interfaces para nuestros nuevos tipos de datos
 interface Skill {
@@ -49,9 +50,6 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [profileLoaded, setProfileLoaded] = useState(false);
   const [portfolioLoaded, setPortfolioLoaded] = useState(false);
-  const [skillsLoaded, setSkillsLoaded] = useState(false);
-  const [experienceLoaded, setExperienceLoaded] = useState(false);
-  const [educationLoaded, setEducationLoaded] = useState(false);
 
   const fetchPortfolioItems = async () => {
     try {
@@ -85,7 +83,6 @@ export default function Profile() {
 
       if (response.ok) {
         if (!data.profession) {
-          // If the user doesn't have a profession set, redirect to the first-time setup page
           router.push('/edit/start')
         } else {
           setProfileData({
@@ -96,11 +93,13 @@ export default function Profile() {
             profile_image: data.profile_image || '',
             socialLinks: data.socialLinks || []
           })
+          setEducationSectionName(data.education_section_name)
+          setExperienceSectionName(data.experience_section_name)
+          setSkills(data.skills);
           setProfileLoaded(true);
+          setEducationItems(data.educationItems);
+          setExperienceItems(data.experienceItems);
           fetchPortfolioItems()
-          fetchSkills()
-          fetchExperienceItems()
-          fetchEducationItems()
         }
       } else {
         toast.error('Failed to load profile data')
@@ -116,70 +115,45 @@ export default function Profile() {
     fetchProfileData();
   };
 
-  // Nuevas funciones para manejar habilidades y secciones
-  const fetchSkills = async () => {
-    try {
-      const response = await fetch('/api/skills');
-      const data = await response.json();
-      if (response.ok) {
-        setSkills(data);
-      } else {
-        toast.error('Failed to load skills');
-      }
-    } catch (error) {
-      console.error('Error fetching skills:', error);
-      toast.error('An error occurred while loading skills.');
-    } finally {
-      setSkillsLoaded(true);
-    }
-  };
-
-  const fetchExperienceItems = async () => {
-    try {
-      const response = await fetch('/api/experience-items');
-      const data = await response.json();
-      if (response.ok) {
-        setExperienceItems(data.items);
-        setExperienceSectionName(data.sectionName);
-      } else {
-        toast.error('Failed to load experience items');
-      }
-    } catch (error) {
-      console.error('Error fetching experience items:', error);
-      toast.error('An error occurred while loading experience items.');
-    } finally {
-      setExperienceLoaded(true);
-    }
-  };
-
-  const fetchEducationItems = async () => {
-    try {
-      const response = await fetch('/api/education-items');
-      const data = await response.json();
-      if (response.ok) {
-        setEducationItems(data.items);
-        setEducationSectionName(data.sectionName);
-      } else {
-        toast.error('Failed to load education items');
-      }
-    } catch (error) {
-      console.error('Error fetching education items:', error);
-      toast.error('An error occurred while loading education items.');
-    } finally {
-      setEducationLoaded(true);
-    }
-  };
-
   useEffect(() => {
-    if (profileLoaded && portfolioLoaded && skillsLoaded && experienceLoaded && educationLoaded) {
+    if (
+        profileLoaded && 
+        portfolioLoaded
+      ) {
       setIsLoading(false);
     }
-  }, [profileLoaded, portfolioLoaded, skillsLoaded, experienceLoaded, educationLoaded]);
+  }, [profileLoaded, portfolioLoaded]);
 
   if (status === 'loading' || isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background text-title">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="relative w-32 h-32"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 border-t-4 border-blue-500 rounded-full"
+          ></motion.div>
+          <Image
+            src="/gg-studio-logo.svg"
+            alt="Geek Guys Studio Logo"
+            width={80}
+            height={80}
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          />
+        </motion.div>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="mt-4 text-lg font-medium text-gray-300"
+        >
+          Loading your session...
+        </motion.p>
       </div>
     );
   }
@@ -214,13 +188,13 @@ export default function Profile() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <img 
-                    src={profileData.profile_image} 
-                    alt={profileData.fullName} 
+                  <img
+                    src={profileData.profile_image}
+                    alt={profileData.fullName}
                     className="
-                      w-full h-auto border-4 border-gray-200/20 lg:w-[19rem] 
+                      w-full h-auto border-4 border-border lg:w-[19rem] 
                       lg:h-[19rem] 2xl:w-[21rem] 2xl:h-[21rem] rounded-3xl object-cover
-                    " 
+                    "
                   />
                   <div className="text-center sm:text-left">
                     <h1 className='text-4xl sm:text-3xl lg:text-4xl font-semibold'>
@@ -322,10 +296,13 @@ export default function Profile() {
             </div>
           </section>
 
-          <hr className='border-t-[3px] border-gray-100/10 my-8' />
+          {/* <hr className='border-t-[2px] border-gray-100/10 my-8' /> */}
 
           <motion.section
-            className='grid lg:grid-cols-3 lg:divide-x-[2.3px] lg:divide-y-0 divide-y-2 divide-gray-100/10 gap-2 text-text lg:py-5 lg:px-2 rounded-3xl'
+            className='
+              grid lg:grid-cols-3  my-11 border-2 border-border gap-2 text-text lg:py-5 lg:px-2 rounded-3xl
+              lg:divide-x-[2.3px] lg:divide-y-0 divide-y-2 divide-gray-100/10
+            '
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -377,7 +354,7 @@ export default function Profile() {
                 {skills.map((skill, index) => (
                   <motion.div
                     key={skill.id}
-                    className='bg-[#191D20] ring-2 ring-blue-100/30 text-text px-3 py-1 rounded-full flex items-center'
+                    className='bg-card ring-2 ring-border text-text px-3 py-1 rounded-full flex items-center'
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: index * 0.05 }}
@@ -390,7 +367,7 @@ export default function Profile() {
           </motion.section>
 
           {/* Seccion de proyectos */}
-          <hr className='border-t-[3px] border-gray-100/10 my-8' />
+          {/* <hr className='border-t-[2px] border-gray-100/10 my-8' /> */}
           <motion.div
             className="grid gap-6"
             initial={{ opacity: 0 }}

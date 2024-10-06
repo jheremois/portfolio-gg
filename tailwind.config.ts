@@ -15,7 +15,7 @@ const config: Config = {
   			heading: ['var(--font-heading)', ...fontFamily.sans],
   			body: ['var(--font-body)', ...fontFamily.sans]
   		},
-  		colors: {
+  		/* colors: {
   			title: '#F4F4F4',
   			text: '#e5e7ebf2',
   			input: '#151720',
@@ -24,13 +24,27 @@ const config: Config = {
   			primary: '#0A84FF',
   			secondary: '#191D20',
   			card: '#08070b'
-  		},
+  		}, */
   		/* borderRadius: {
   			xl: '`calc(var(--radius) + 4px)`',
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		}, */
+		  colors: {
+			title: '#F4F4F4',
+  			text: '#e5e7ebf2',
+			buttons: "#3399ff",
+			primary: "#3399ff",
+			buttonsSecondary: "#131315",
+			muted: "#252527",
+			card: "#111113",
+			input: "#070708",
+			sidebar: "#02040a",
+			border: "#2a2a2c",
+			background: "#070708",
+			//muted: "#3E3E42",
+		  },
   		keyframes: {
   			'accordion-down': {
   				from: {

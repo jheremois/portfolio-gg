@@ -31,11 +31,11 @@ export default function ShareModal({ username }: ShareModalProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <button className="px-4 py-3 border-2 border-gray-200/30 rounded-xl font-semibold bg-secondary w-full text-base">
+                <button className="px-4 py-3 border-2 border-border rounded-xl font-semibold bg-buttonsSecondary w-full text-base">
                     Share
                 </button>
             </DialogTrigger>
-            <DialogContent className="bg-card text-title border-gray-200/20 sm:max-w-md">
+            <DialogContent className="bg-card text-title border-border sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>Share profile</DialogTitle>
                 </DialogHeader>

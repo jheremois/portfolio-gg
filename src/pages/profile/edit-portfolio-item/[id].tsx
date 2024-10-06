@@ -166,7 +166,7 @@ export default function EditPortfolioItem() {
                                         <ErrorMessage name="portfolio_name" component="p" className="text-red-500 text-xs mt-1" />
                                     </div>
 
-                                    <div>
+                                   {/*  <div>
                                         <label htmlFor="color" className="block text-sm font-medium mb-1">
                                             Color
                                         </label>
@@ -188,7 +188,7 @@ export default function EditPortfolioItem() {
                                             />
                                         </div>
                                         <ErrorMessage name="color" component="p" className="text-red-500 text-xs mt-1" />
-                                    </div>
+                                    </div> */}
 
                                     <div>
                                         <label htmlFor="description" className="block text-sm font-medium mb-1">

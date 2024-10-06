@@ -48,7 +48,7 @@ export default function FloatingNavLayout({ children, showNav = true }: Floating
     return (
         <div className="min-h-screen">
             {showNav && (
-                <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-black border-2 border-white/10 shadow-lg rounded-full p-2">
+                <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-sidebar border-2 border-border shadow-lg rounded-full p-2">
                     <div className="flex items-center space-x-1">
                         {navItems.map((item) => (
                             <Link key={item.path} href={item.path}>

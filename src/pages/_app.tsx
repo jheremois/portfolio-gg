@@ -5,6 +5,7 @@ import type { AppProps } from 'next/app';
 import { Toaster } from 'react-hot-toast';
 import FloatingNavLayout from '@/components/ui/HomeNav';
 import { useRouter } from 'next/router';
+import { UserProvider } from '@/hooks/UserContext';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const router = useRouter()
@@ -13,9 +14,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <Toaster/>
-      <FloatingNavLayout showNav={showNav}>
-        <Component {...pageProps} />
-      </FloatingNavLayout>
+      <UserProvider>
+        <FloatingNavLayout showNav={showNav}>
+          <Component {...pageProps} />
+        </FloatingNavLayout>
+      </UserProvider>
     </SessionProvider>
   );
 }

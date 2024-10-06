@@ -4,31 +4,12 @@
 
 @layer base {
   :root {
-    --destructive-foreground: 0 0% 100%;
-    --secondary-foreground: 0 0% 100%;
-    --popover-foreground: 0 0% 100%;
-    --primary-foreground: 0 0% 100%;
-    --accent-foreground: 0 0% 100%;
-    --muted-foreground: 0 0% 100%;
-    --card-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
-    --background: 240 37% 4%;
-    --foreground: 0 0% 100%;
-    --secondary: 240 37% 20%;
-    --popover: 240 37% 6%;
-    --primary: 249 91% 66%;
-    --border: 240 37% 12%;
-    --accent: 249 91% 65%;
-    --muted: 240 37% 10%;
-    --input: 240 37% 36%;
-    --card: #131111;
-    --ring: 249 91% 66%;
     --radius: 0.5rem;
   }
 }
 
 body{
-  background-color: #121315;
+  background-color: #070708;
   font-family: Arial, Helvetica, sans-serif;
 }
 

@@ -4,7 +4,9 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import EditLayout from '@/components/ui/EditLayout'
-import { Loader2, PlusIcon, XIcon } from 'lucide-react'
+import { Loader2, PenIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 interface Skill {
     id: string
@@ -15,6 +17,14 @@ interface SectionItem {
     id: string
     title: string
     description: string
+}
+
+interface UserData {
+    skills: Skill[]
+    experienceItems: SectionItem[]
+    educationItems: SectionItem[]
+    experienceSectionName: string
+    educationSectionName: string
 }
 
 interface EditModalState {
@@ -36,15 +46,10 @@ const MAX_SKILLS = 8
 const MAX_ITEMS = 4
 
 export default function EditProfile() {
-
     const { data: session, status } = useSession()
     const router = useRouter()
-    const [skills, setSkills] = useState<Skill[]>([])
+    const [userData, setUserData] = useState<UserData | null>(null)
     const [newSkill, setNewSkill] = useState('')
-    const [experienceItems, setExperienceItems] = useState<SectionItem[]>([])
-    const [educationItems, setEducationItems] = useState<SectionItem[]>([])
-    const [experienceSectionName, setExperienceSectionName] = useState('Experience')
-    const [educationSectionName, setEducationSectionName] = useState('Education')
     const [newExperienceItem, setNewExperienceItem] = useState<Omit<SectionItem, 'id'>>({
         title: '',
         description: ''
@@ -73,79 +78,31 @@ export default function EditProfile() {
         if (status === 'unauthenticated') {
             router.push('/')
         } else if (status === 'authenticated') {
-            fetchData()
+            fetchUserData()
         }
     }, [status, router])
 
-    const fetchData = async () => {
+    const fetchUserData = async () => {
         setIsLoading(true)
-        await Promise.all([fetchSkills(), fetchExperienceItems(), fetchEducationItems()])
-        setIsLoading(false)
-    }
-
-    useEffect(() => {
-        if (status === 'unauthenticated') {
-            router.push('/')
-        } else if (status === 'authenticated') {
-            fetchSkills()
-            fetchExperienceItems()
-            fetchEducationItems()
-        }
-    }, [status, router])
-
-    const fetchSkills = async () => {
         try {
-            const response = await fetch('/api/skills')
+            const response = await fetch('/api/getUser')
             const data = await response.json()
             if (response.ok) {
-                const filteredSkills = (data || []).filter((skill: Skill | null) =>
-                    skill && typeof skill === 'object' && 'id' in skill && 'skill_name' in skill
-                ).slice(0, MAX_SKILLS)
-                setSkills(filteredSkills)
+                setUserData({
+                    skills: data.skills || [],
+                    experienceItems: data.experienceItems || [],
+                    educationItems: data.educationItems || [],
+                    experienceSectionName: data.experience_section_name || 'Experience',
+                    educationSectionName: data.education_section_name || 'Education'
+                })
             } else {
-                toast.error('Failed to load skills')
+                toast.error('Failed to load user data')
             }
         } catch (error) {
-            console.error('Error fetching skills:', error)
-            toast.error('An error occurred while loading skills.')
-        }
-    }
-
-    const fetchExperienceItems = async () => {
-        try {
-            const response = await fetch('/api/experience-items')
-            const data = await response.json()
-            if (response.ok) {
-                const filteredItems = (data.items || []).filter((item: SectionItem | null) =>
-                    item && typeof item === 'object' && 'id' in item && 'title' in item && 'description' in item
-                ).slice(0, MAX_ITEMS)
-                setExperienceItems(filteredItems)
-                setExperienceSectionName(data.sectionName || 'Experience')
-            } else {
-                toast.error('Failed to load experience items')
-            }
-        } catch (error) {
-            console.error('Error fetching experience items:', error)
-            toast.error('An error occurred while loading experience items.')
-        }
-    }
-
-    const fetchEducationItems = async () => {
-        try {
-            const response = await fetch('/api/education-items')
-            const data = await response.json()
-            if (response.ok) {
-                const filteredItems = (data.items || []).filter((item: SectionItem | null) =>
-                    item && typeof item === 'object' && 'id' in item && 'title' in item && 'description' in item
-                ).slice(0, MAX_ITEMS)
-                setEducationItems(filteredItems)
-                setEducationSectionName(data.sectionName || 'Education')
-            } else {
-                toast.error('Failed to load education items')
-            }
-        } catch (error) {
-            console.error('Error fetching education items:', error)
-            toast.error('An error occurred while loading education items.')
+            console.error('Error fetching user data:', error)
+            toast.error('An error occurred while loading user data.')
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -158,7 +115,7 @@ export default function EditProfile() {
             setFormErrors(prev => ({ ...prev, newSkill: 'Skill must be 50 characters or less' }))
             return false
         }
-        if (skills.length >= MAX_SKILLS) {
+        if (userData && userData.skills.length >= MAX_SKILLS) {
             setFormErrors(prev => ({ ...prev, newSkill: `You can only add up to ${MAX_SKILLS} skills` }))
             return false
         }
@@ -181,7 +138,10 @@ export default function EditProfile() {
             console.log('Add skill response:', data)
 
             if (response.ok && data && typeof data === 'object' && 'id' in data && 'skill_name' in data) {
-                setSkills(prevSkills => [...prevSkills, data as Skill].slice(0, MAX_SKILLS))
+                setUserData(prevData => ({
+                    ...prevData!,
+                    skills: [...prevData!.skills, data as Skill].slice(0, MAX_SKILLS)
+                }))
                 setNewSkill('')
                 toast.success('Skill added successfully')
             } else {
@@ -197,22 +157,25 @@ export default function EditProfile() {
         try {
             const response = await fetch(`/api/skills/${skillId}`, {
                 method: 'DELETE',
-            });
+            })
 
-            const data = await response.json();
+            const data = await response.json()
             console.log('Delete skill response:', data)
 
             if (response.ok) {
-                setSkills(prevSkills => prevSkills.filter(skill => skill.id !== skillId));
-                toast.success('Skill deleted successfully');
+                setUserData(prevData => ({
+                    ...prevData!,
+                    skills: prevData!.skills.filter(skill => skill.id !== skillId)
+                }))
+                toast.success('Skill deleted successfully')
             } else {
-                throw new Error(data.error || 'Failed to delete skill');
+                throw new Error(data.error || 'Failed to delete skill')
             }
         } catch (error: any) {
-            console.error('Error deleting skill:', error);
-            toast.error(`An error occurred while deleting the skill: ${error.message}`);
+            console.error('Error deleting skill:', error)
+            toast.error(`An error occurred while deleting the skill: ${error.message}`)
         }
-    };
+    }
 
     const validateSectionItem = (item: Omit<SectionItem, 'id'>, section: 'experience' | 'education'): boolean => {
         let isValid = true
@@ -234,8 +197,8 @@ export default function EditProfile() {
             isValid = false
         }
 
-        const items = section === 'experience' ? experienceItems : educationItems
-        if (items.length >= MAX_ITEMS) {
+        const items = section === 'experience' ? userData?.experienceItems : userData?.educationItems
+        if (items && items.length >= MAX_ITEMS) {
             errors.maxItems = `You can only add up to ${MAX_ITEMS} ${section} items`
             isValid = false
         }
@@ -259,7 +222,10 @@ export default function EditProfile() {
             console.log('Add experience item response:', data)
 
             if (response.ok && data && typeof data === 'object' && 'id' in data && 'title' in data && 'description' in data) {
-                setExperienceItems(prevItems => [...prevItems, data as SectionItem].slice(0, MAX_ITEMS))
+                setUserData(prevData => ({
+                    ...prevData!,
+                    experienceItems: [...prevData!.experienceItems, data as SectionItem].slice(0, MAX_ITEMS)
+                }))
                 setNewExperienceItem({
                     title: '',
                     description: ''
@@ -289,7 +255,10 @@ export default function EditProfile() {
             console.log('Add education item response:', data)
 
             if (response.ok && data && typeof data === 'object' && 'id' in data && 'title' in data && 'description' in data) {
-                setEducationItems(prevItems => [...prevItems, data as SectionItem].slice(0, MAX_ITEMS))
+                setUserData(prevData => ({
+                    ...prevData!,
+                    educationItems: [...prevData!.educationItems, data as SectionItem].slice(0, MAX_ITEMS)
+                }))
                 setNewEducationItem({
                     title: '',
                     description: ''
@@ -318,11 +287,10 @@ export default function EditProfile() {
             console.log(`Update ${section} item response:`, data)
 
             if (response.ok) {
-                if (section === 'experience') {
-                    setExperienceItems(prevItems => prevItems.map(item => item.id === itemId ? updatedItem : item))
-                } else {
-                    setEducationItems(prevItems => prevItems.map(item => item.id === itemId ? updatedItem : item))
-                }
+                setUserData(prevData => ({
+                    ...prevData!,
+                    [section === 'experience' ? 'experienceItems' : 'educationItems']: prevData![section === 'experience' ? 'experienceItems' : 'educationItems'].map(item => item.id === itemId ? updatedItem : item)
+                }))
                 toast.success(`${section} item updated successfully`)
                 setEditModalState({ isOpen: false, type: null, item: null })
             } else {
@@ -341,14 +309,12 @@ export default function EditProfile() {
             })
 
             const data = await response.json()
-            console.log(`Delete ${section} item response:`, data)
 
             if (response.ok) {
-                if (section === 'experience') {
-                    setExperienceItems(prevItems => prevItems.filter(item => item.id !== itemId))
-                } else {
-                    setEducationItems(prevItems => prevItems.filter(item => item.id !== itemId))
-                }
+                setUserData(prevData => ({
+                    ...prevData!,
+                    [section === 'experience' ? 'experienceItems' : 'educationItems']: prevData![section === 'experience' ? 'experienceItems' : 'educationItems'].filter(item => item.id !== itemId)
+                }))
                 toast.success(`${section} item deleted successfully`)
             } else {
                 throw new Error(data.error || `Failed to delete ${section} item`)
@@ -386,11 +352,10 @@ export default function EditProfile() {
             console.log(`Update ${section} section name response:`, data)
 
             if (response.ok) {
-                if (section === 'experience') {
-                    setExperienceSectionName(newName)
-                } else {
-                    setEducationSectionName(newName)
-                }
+                setUserData(prevData => ({
+                    ...prevData!,
+                    [section === 'experience' ? 'experienceSectionName' : 'educationSectionName']: newName
+                }))
                 toast.success(`${section} section name updated successfully`)
                 setSectionNameModalState({ isOpen: false, type: null })
             } else {
@@ -409,7 +374,7 @@ export default function EditProfile() {
 
     const openSectionNameModal = (type: 'experience' | 'education') => {
         setSectionNameModalState({ isOpen: true, type })
-        setNewSectionName(type === 'experience' ? experienceSectionName : educationSectionName)
+        setNewSectionName(type === 'experience' ? userData?.experienceSectionName || '' : userData?.educationSectionName || '')
     }
 
     const toggleExperienceForm = () => {
@@ -429,8 +394,34 @@ export default function EditProfile() {
     if (status === 'loading' || isLoading) {
         return (
             <EditLayout>
-                <div className="flex items-center justify-center h-64">
-                    <Loader2 className="w-8 h-8 animate-spin text-center text-white" />
+                <div className="flex flex-col items-center justify-center min-h-[40rem] bg-background text-title">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="relative w-32 h-32"
+                    >
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-0 border-t-4 border-blue-500 rounded-full"
+                        ></motion.div>
+                        <Image
+                            src="/gg-studio-logo.svg"
+                            alt="Geek Guys Studio Logo"
+                            width={80}
+                            height={80}
+                            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                        />
+                    </motion.div>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5, duration: 0.5 }}
+                        className="mt-4 text-lg font-medium text-gray-300"
+                    >
+                        Loading your profile information...
+                    </motion.p>
                 </div>
             </EditLayout>
         )
@@ -440,9 +431,9 @@ export default function EditProfile() {
     return (
         <EditLayout>
             <div className="max-w-4xl mx-auto px-4 py-12 text-text">
-                <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
+                <h1 className="text-3xl font-bold mb-8">Edit Profile Details</h1>
                 <section className="my-8 px-1">
-                    <h2 className="text-2xl font-semibold mb-4">Skills ({skills.length}/{MAX_SKILLS})</h2>
+                    <h2 className="text-2xl font-semibold mb-4">Skills ({userData?.skills.length}/{MAX_SKILLS})</h2>
                     <form onSubmit={handleAddSkill} className="mb-4">
                         <div className="flex gap-2 items-center">
                             <input
@@ -453,8 +444,12 @@ export default function EditProfile() {
                                     validateSkill(e.target.value)
                                 }}
                                 placeholder="Enter a new skill"
-                                className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                disabled={skills.length >= MAX_SKILLS}
+                                className="
+                                    flex-1 min-w-0 block w-full px-3 py-3 rounded-lg 
+                                    bg-input border-2 border-border text-text focus:ring-2 
+                                    focus:ring-blue-500 focus:border-blue-500 sm:text-sm
+                                "
+                                disabled={userData!.skills.length >= MAX_SKILLS}
                             />
                             <button
                                 type="submit"
@@ -462,7 +457,7 @@ export default function EditProfile() {
                                             cursor-pointer mb-2 bg-text border-2 rounded-lg border-white/30 text-gray-950 font-semibold py-3
                                             px-10 mx-auto lg:mx-0 w-full lg:w-fit mt-2
                                         "
-                                disabled={skills.length >= MAX_SKILLS}
+                                disabled={userData!.skills.length >= MAX_SKILLS}
                             >
                                 Add Skill
                             </button>
@@ -470,27 +465,27 @@ export default function EditProfile() {
                         {formErrors.newSkill && <p className="text-red-500 mt-1">{formErrors.newSkill}</p>}
                     </form>
                     <div className="flex flex-wrap gap-3 border-2 rounded-xl p-4 border-gray-50/15">
-                        {skills.map((skill) => (
-                            <div key={skill.id} className="bg-slate-500/30 ring-2 ring-blue-100/20 px-3 py-1 rounded-full flex items-center">
+                        {userData?.skills.map((skill) => (
+                            <div key={skill.id} className="bg-muted ring-2 ring-border px-3 py-1 rounded-full flex items-center">
                                 <span>{skill.skill_name}</span>
                                 <button
                                     onClick={() => handleDeleteSkill(skill.id)}
                                     className="
-                                        ml-2 text-black bg-red-500 w-3 h-3 cale-105 flex items-center justify-center 
+                                        ml-2 text-black bg-red-500 w-4 h-4 cale-105 flex items-center justify-center 
                                         rounded-full hover:bg-red-500 hover:scale-110 duration-100
                                     "
                                     aria-label={`Delete ${skill.skill_name} skill`}
                                 >
-                                    <XIcon/>
+                                    <XIcon />
                                 </button>
                             </div>
                         ))}
                     </div>
                 </section>
-                <hr className='border-t-4 border-gray-100/50' />
+                <hr className='border-t-[3px] border-gray-100/10' />
                 <section className="my-8 px-1">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-semibold">{experienceSectionName} ({experienceItems.length}/{MAX_ITEMS})</h2>
+                        <h2 className="text-2xl font-semibold">{userData!.experienceSectionName} ({userData!.experienceItems.length}/{MAX_ITEMS})</h2>
                         <button
                             onClick={() => openSectionNameModal('experience')}
                             className="text-blue-500 hover:text-blue-700"
@@ -498,42 +493,43 @@ export default function EditProfile() {
                             Edit Section Name
                         </button>
                     </div>
-                    <div className="flex flex-col divide-y-2 divide-gray-50/20">
-                        {experienceItems.map((item) => (
-                            <div key={item.id} className="p-4 py-6 flex items-start justify-between">
+                    <div className="flex flex-col space-y-4">
+                        {userData!.experienceItems.map((item) => (
+                            <div key={item.id} className="p-4 py-6 flex items-start justify-between ring-gray-100/20 bg-card ring-2 rounded-2xl">
                                 <div className="">
                                     <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
                                     <p className="mb-2">{item.description}</p>
                                 </div>
-                                <div className="flex justify-end space-x-4">
-                                    <button
-                                        onClick={() => openEditModal('experience', item)}
-                                        className="text-blue-500 hover:text-blue-700"
-                                    >
-                                        Edit
-                                    </button>
+                                <div className="space-x-3 flex">
                                     <button
                                         onClick={() => handleDeleteItem('experience', item.id)}
-                                        className="text-red-500 hover:text-red-700"
+                                        className="bg-red-600 rounded-full flex items-center justify-center text-white p-3 hover:scale-105 duration-150 w-12 h-12 shadow-lg border-2 border-gray-100/30"
                                     >
-                                        Delete
+                                        <Trash2Icon width={20} />
+                                    </button>
+                                    <button
+                                        onClick={() => openEditModal('experience', item)}
+                                        className="bg-secondary rounded-full flex items-center justify-center text-white p-3 hover:scale-105 duration-150 w-12 h-12 shadow-lg border-2 border-gray-100/30"
+                                    >
+                                        <PenIcon width={20} />
                                     </button>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    {experienceItems.length < MAX_ITEMS && (
+                    {userData!.experienceItems.length < MAX_ITEMS && (
                         <div className="">
                             {!showExperienceForm && (
                                 <button
                                     onClick={toggleExperienceForm}
-                                    className="cursor-pointer mb-2 bg-input border-2 rounded-lg border-gray-300/20 text-text py-3 px-10 mx-auto lg:mx-0 w-full mt-2 flex justify-center"
+                                    className="cursor-pointer mb-2 gap-2 bg-sidebar border-2 rounded-lg border-gray-300/20 text-text py-3 px-10 mx-auto lg:mx-0 w-full mt-4 flex justify-center"
                                 >
+                                    Add new {" "}
                                     <PlusIcon />
                                 </button>
                             )}
                             {showExperienceForm && (
-                                <form onSubmit={handleAddExperienceItem} className="mb-4 p-4 py-6 border-2 border-gray-200/20 rounded-xl">
+                                <form onSubmit={handleAddExperienceItem} className="mb-4 mt-4 p-4 py-6 border-2 border-border bg-card rounded-xl">
                                     <input
                                         type="text"
                                         value={newExperienceItem.title}
@@ -542,7 +538,7 @@ export default function EditProfile() {
                                             validateSectionItem({ ...newExperienceItem, title: e.target.value }, 'experience')
                                         }}
                                         placeholder="Title"
-                                        className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     />
                                     {formErrors.title && <p className="text-red-500 mb-2">{formErrors.title}</p>}
                                     <textarea
@@ -552,7 +548,7 @@ export default function EditProfile() {
                                             validateSectionItem({ ...newExperienceItem, description: e.target.value }, 'experience')
                                         }}
                                         placeholder="Description"
-                                        className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         rows={3}
                                     />
                                     {formErrors.description && <p className="text-red-500 mb-2">{formErrors.description}</p>}
@@ -578,10 +574,10 @@ export default function EditProfile() {
                     )}
                 </section>
 
-                <hr className='border-t-4 border-gray-100/50' />
+                <hr className='border-t-[3px] border-gray-100/10' />
                 <section className="my-8 px-1">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-2xl font-semibold">{educationSectionName} ({educationItems.length}/{MAX_ITEMS})</h2>
+                        <h2 className="text-2xl font-semibold">{userData!.educationSectionName} ({userData!.educationItems.length}/{MAX_ITEMS})</h2>
                         <button
                             onClick={() => openSectionNameModal('education')}
                             className="text-blue-500 hover:text-blue-700"
@@ -589,42 +585,43 @@ export default function EditProfile() {
                             Edit Section Name
                         </button>
                     </div>
-                    <div className="flex flex-col divide-y-2 divide-gray-50/20">
-                        {educationItems.map((item) => (
-                            <div key={item.id} className="p-4 py-6 flex items-start justify-between">
-                                <div className="">
-                                    <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-                                    <p className="mb-2">{item.description}</p>
-                                </div>
-                                <div className="flex justify-end space-x-4">
-                                    <button
-                                        onClick={() => openEditModal('education', item)}
-                                        className="text-blue-500 hover:text-blue-700"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeleteItem('education', item.id)}
-                                        className="text-red-500 hover:text-red-700"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
+                    <div className="flex flex-col space-y-4">
+                        {userData!.educationItems.map((item) => (
+                            <div key={item.id} className="p-4 py-6 flex items-start justify-between ring-gray-100/20 bg-card ring-2 rounded-2xl">
+                            <div className="">
+                                <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
+                                <p className="mb-2">{item.description}</p>
                             </div>
+                            <div className="space-x-3 flex">
+                                <button
+                                    onClick={() => handleDeleteItem('experience', item.id)}
+                                    className="bg-red-600 rounded-full flex items-center justify-center text-white p-3 hover:scale-105 duration-150 w-12 h-12 shadow-lg border-2 border-gray-100/30"
+                                >
+                                    <Trash2Icon width={20} />
+                                </button>
+                                <button
+                                    onClick={() => openEditModal('experience', item)}
+                                    className="bg-secondary rounded-full flex items-center justify-center text-white p-3 hover:scale-105 duration-150 w-12 h-12 shadow-lg border-2 border-gray-100/30"
+                                >
+                                    <PenIcon width={20} />
+                                </button>
+                            </div>
+                        </div>
                         ))}
                     </div>
-                    {educationItems.length < MAX_ITEMS && (
+                    {userData!.educationItems.length < MAX_ITEMS && (
                         <div className="">
                             {!showEducationForm && (
                                 <button
                                     onClick={toggleEducationForm}
-                                    className="cursor-pointer mb-2 bg-input border-2 rounded-lg border-gray-300/20 text-text py-3 px-10 mx-auto lg:mx-0 w-full mt-2 flex justify-center"
+                                    className="cursor-pointer mb-2 gap-2 bg-sidebar border-2 rounded-lg border-gray-300/20 text-text py-3 px-10 mx-auto lg:mx-0 w-full mt-4 flex justify-center"
                                 >
+                                    Add new {" "}
                                     <PlusIcon />
                                 </button>
                             )}
                             {showEducationForm && (
-                                <form onSubmit={handleAddEducationItem} className="mb-4 p-4 py-6 border-2 border-gray-200/20 rounded-xl">
+                                <form onSubmit={handleAddEducationItem} className="mb-4 mt-4 p-4 py-6 border-2 border-border bg-card rounded-xl">
                                     <input
                                         type="text"
                                         value={newEducationItem.title}
@@ -633,7 +630,7 @@ export default function EditProfile() {
                                             validateSectionItem({ ...newEducationItem, title: e.target.value }, 'education')
                                         }}
                                         placeholder="Title"
-                                        className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     />
                                     {formErrors.title && <p className="text-red-500 mb-2">{formErrors.title}</p>}
                                     <textarea
@@ -643,7 +640,7 @@ export default function EditProfile() {
                                             validateSectionItem({ ...newEducationItem, description: e.target.value }, 'education')
                                         }}
                                         placeholder="Description"
-                                        className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         rows={3}
                                     />
                                     {formErrors.description && <p className="text-red-500 mb-2">{formErrors.description}</p>}
@@ -668,13 +665,6 @@ export default function EditProfile() {
                         </div>
                     )}
                 </section>
-
-                {/* <button
-                    className="bg-primary w-full text-white text-lg font-semibold px-4 py-3 rounded-lg"
-                >
-                    Save profile information
-                </button> */}
-
                 <Dialog open={editModalState.isOpen} onOpenChange={(isOpen) => setEditModalState({ ...editModalState, isOpen })}>
                     <DialogContent className='bg-card text-text'>
                         <DialogHeader>
@@ -723,7 +713,7 @@ export default function EditProfile() {
                 </Dialog>
 
                 <Dialog open={sectionNameModalState.isOpen} onOpenChange={(isOpen) => setSectionNameModalState({ ...sectionNameModalState, isOpen })}>
-                <DialogContent className='bg-card text-text'>
+                    <DialogContent className='bg-card text-text'>
                         <DialogHeader>
                             <DialogTitle>Edit Section Name</DialogTitle>
                         </DialogHeader>

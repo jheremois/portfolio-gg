@@ -7,6 +7,8 @@ import { toast } from 'react-hot-toast';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { PlusIcon, TrashIcon } from 'lucide-react';
+import Image from 'next/image';
+import { motion } from 'framer-motion'
 
 const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -33,6 +35,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
     const { data: session, status }: any = useSession();
     const router = useRouter();
     const [formChanged, setFormChanged] = useState(false);
+    const [isLoading, setIsLoading] = useState(true)
     const [profileData, setProfileData] = useState({
         username: '',
         fullName: '',
@@ -53,6 +56,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
     }, [status, session, router]);
 
     const fetchProfileData = async () => {
+        setIsLoading(true)
         try {
             const response = await fetch('/api/getUser');
             const data = await response.json();
@@ -72,6 +76,8 @@ export default function EditProfile({ funcion }: EditProfileProps) {
         } catch (error) {
             console.error('Error fetching profile data:', error);
             toast.error('An error occurred while loading profile data.');
+        }finally{
+            setIsLoading(false)
         }
     };
 
@@ -125,8 +131,38 @@ export default function EditProfile({ funcion }: EditProfileProps) {
         }
     };
 
-    if (status === 'loading') {
-        return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    if (status === 'loading' || isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[20rem] bg-background text-title">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="relative w-32 h-32"
+                >
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-0 border-t-4 border-blue-500 rounded-full"
+                    ></motion.div>
+                    <Image
+                        src="/gg-studio-logo.svg"
+                        alt="Geek Guys Studio Logo"
+                        width={80}
+                        height={80}
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                </motion.div>
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="mt-4 text-lg font-medium text-gray-300"
+                >
+                    Loading your profile information...
+                </motion.p>
+            </div>
+        )
     }
 
     return (
@@ -174,17 +210,17 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                     <p className="text-sm text-gray-400 mt-2">At least 800x800 px recommended. JPG or PNG allowed.</p>
                                 </div>
                             </div>
-                            <hr className='border-gray-300/20 border-t-[2.5px]' />
+                            <hr className='border-border border-t-[2.5px]' />
                             <div className="space-y-8 lg:space-y-4">
                                 <div>
                                     <label htmlFor="username" className="block text-sm font-medium mb-2">Username (unique, no spaces or special characters)</label>
                                     <div className="flex">
-                                        <span className="inline-flex items-center px-3 rounded-l-md border-2 border-r-0 border-gray-300/20 bg-gray-950/20 text-gray-100 sm:text-sm">www.portfoliogg.com/</span>
+                                        <span className="inline-flex items-center px-3 rounded-l-md border-2 border-r-0 border-border bg-input text-gray-100 sm:text-sm">www.portfoliogg.com/</span>
                                         <Field
                                             type="text"
                                             id="username"
                                             name="username"
-                                            className="flex-1 min-w-0 block w-full px-3 py-3 rounded-none rounded-r-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="flex-1 min-w-0 block w-full px-3 py-3 rounded-none rounded-r-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         />
                                     </div>
                                     <ErrorMessage name="username" component="p" className="text-red-500 text-xs mt-1" />
@@ -196,7 +232,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                             type="text"
                                             id="fullName"
                                             name="fullName"
-                                            className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         />
                                         <ErrorMessage name="fullName" component="p" className="text-red-500 text-xs mt-1" />
                                     </div>
@@ -206,7 +242,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                             type="text"
                                             id="profession"
                                             name="profession"
-                                            className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         />
                                         <ErrorMessage name="profession" component="p" className="text-red-500 text-xs mt-1" />
                                     </div>
@@ -217,7 +253,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                         as="textarea"
                                         id="description"
                                         name="description"
-                                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         rows={4}
                                     />
                                 </div>
@@ -231,7 +267,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                                         <Field
                                                             as="select"
                                                             name={`socialLinks.${index}.platform`}
-                                                            className="flex-1 px-3 py-2 rounded-lg lg:max-w-fit bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                            className="flex-1 px-3 py-2 rounded-lg lg:max-w-fit bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                                         >
                                                             <option value="">Select Platform</option>
                                                             {socialPlatforms.map((platform) => (
@@ -242,7 +278,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                                             name={`socialLinks.${index}.link`}
                                                             type="text"
                                                             placeholder="Link"
-                                                            className="flex-1 px-3 py-2 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                            className="flex-1 px-3 py-2 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                                         />
                                                         <button
                                                             type="button"
@@ -258,7 +294,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                                 <button
                                                     type="button"
                                                     onClick={() => push({ platform: '', link: '' })}
-                                                    className="cursor-pointer mb-2 bg-input border-2 rounded-lg border-gray-300/20 text-text py-3 px-10 mx-auto lg:mx-0 w-full mt-2 flex justify-center"
+                                                    className="cursor-pointer mb-2 bg-input border-2 rounded-lg border-border text-text py-3 px-10 mx-auto lg:mx-0 w-full mt-2 flex justify-center"
                                                 >
                                                     <PlusIcon size={16} className="mr-1" /> Add Social Link
                                                 </button>

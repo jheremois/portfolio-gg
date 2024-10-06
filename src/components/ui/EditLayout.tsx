@@ -1,11 +1,13 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { User, FileText, Briefcase, PlusCircle, ArrowLeft, Menu, X } from 'lucide-react'
-import { useUser } from '@/hooks/useUser'
 import Image from 'next/image'
 import { signOut } from 'next-auth/react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
+import { useUser } from '@/hooks/UserContext'
 
 const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
     const [step, setStep] = useState(1)
@@ -49,7 +51,7 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
     }
 
     return (
-        <Dialog open={open} onOpenChange={() => {}}>
+        <Dialog open={open} onOpenChange={() => { }}>
             <DialogContent className="sm:max-w-[600px] w-[95vw] max-h-[90vh] overflow-y-auto bg-card text-title border-gray-200/20">
                 <DialogHeader>
                     <DialogTitle className="text-xl sm:text-2xl font-bold">{steps[step - 1].title}</DialogTitle>
@@ -76,22 +78,22 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
                     )}
                 </div>
                 <div className="flex justify-between mt-4">
-                    <button 
+                    <button
                         className='
                             bg-secondary border-2 border-gray-300/20 
                             py-2 px-4 rounded-xl text-title font-semibold text-sm sm:text-base
                             disabled:opacity-50 disabled:cursor-not-allowed
-                        ' 
-                        onClick={() => setStep(Math.max(1, step - 1))} 
+                        '
+                        onClick={() => setStep(Math.max(1, step - 1))}
                         disabled={step === 1}
                     >
                         Previous
                     </button>
-                    <button 
+                    <button
                         className='
                             bg-secondary border-2 border-gray-300/20 
                             py-2 px-4 rounded-xl text-title font-semibold text-sm sm:text-base
-                        ' 
+                        '
                         onClick={handleNext}
                     >
                         {step === steps.length ? "Finish" : "Next"}
@@ -107,7 +109,7 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
     const pathname = usePathname()
     const [activeTab, setActiveTab] = useState(pathname)
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-    const { user, isLoading, error } = useUser()
+    const { userData, loading, error } = useUser()
     const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
     const [showWalkthrough, setShowWalkthrough] = useState(true)
 
@@ -169,12 +171,12 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
 
             {/* Side Navigation */}
             <nav className={`
-        fixed md:static inset-y-0 left-0 z-40 w-80 bg-card p-6 text-text shadow-md transform transition-transform duration-300 ease-in-out
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:translate-x-0 border-r-2 border-white/20
-      `}>
+                fixed md:static inset-y-0 left-0 z-40 w-80 bg-sidebar p-6 text-text shadow-md transform transition-transform duration-300 ease-in-out
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                md:translate-x-0 border-r-2 border-white/20
+            `}>
                 <div className="pt-20 lg:pt-12">
-                    {isLoading ? (
+                    {loading ? (
                         <div className="animate-pulse">
                             <div className="h-16 w-16 bg-gray-300 rounded-lg mb-2"></div>
                             <div className="h-6 w-3/4 bg-gray-300 rounded mb-2"></div>
@@ -182,13 +184,13 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                         </div>
                     ) : error ? (
                         <p className="text-red-500">Error: {error}</p>
-                    ) : user ? (
+                    ) : userData ? (
                         <div className="">
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center gap-3">
                                     <img
-                                        src={user.profile_image || '/placeholder-user.jpg'}
-                                        alt={user.name}
+                                        src={userData.profile_image || '/placeholder-user.jpg'}
+                                        alt={userData.name}
                                         width={55}
                                         height={55}
                                         className="rounded-lg h-full"
@@ -239,9 +241,9 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                                     </div>
                                 </div>
                                 <div className="">
-                                    <h2 className="text-lg font-bold text-gray-200">{user.name}</h2>
-                                    {user.email && (
-                                        <p className="text-gray-400 text-xs mt-1">{user.email}</p>
+                                    <h2 className="text-lg font-bold text-gray-200">{userData.name}</h2>
+                                    {userData.username && (
+                                        <p className="text-gray-400 text-xs mt-1">@{userData.username}</p>
                                     )}
                                 </div>
                             </div>
@@ -258,8 +260,8 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                                 <Link href={tab.path}>
                                     <span
                                         className={`flex items-center py-5 px-4 rounded-2xl text-xl font-semibold transition duration-200 ${activeTab === tab.path
-                                            ? 'bg-gray-100/15 text-white'
-                                            : 'text-text hover:bg-gray-300/20'
+                                            ? 'bg-muted text-white'
+                                            : 'text-text hover:bg-muted/80'
                                             }`}
                                         onClick={() => handleTabClick(tab.path)}
                                     >
