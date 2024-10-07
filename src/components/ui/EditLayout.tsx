@@ -242,7 +242,7 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
             <SEOMetadata
                 title="Portfoliogg - Create Your Professional Portfolio"
                 description="Portfoliogg is a user-friendly platform for creating and sharing professional portfolios. Showcase your skills, projects, and achievements with ease."
-                canonicalUrl="https://portfoliogg.com/"
+                canonicalUrl="https://www.portfoliogg.com/"
             />
             <div className="flex min-h-screen">
                 {showWalkthrough && <FirstTimeWalkthrough onComplete={handleWalkthroughComplete} />}

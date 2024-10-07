@@ -19,7 +19,7 @@ const Terms = () => {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">1. Introduction</h2>
           <p className="text-gray-600">
-            Welcome to Portfoliogg ("we," "our," or "us"). By accessing or using our website, located at <a href="https://portfoliogg.com" className="text-blue-600 hover:underline">https://portfoliogg.com</a>, you agree to comply with and be bound by these Terms of Service ("Terms"). If you disagree with any part of these Terms, you may not use our service.
+            Welcome to Portfoliogg ("we," "our," or "us"). By accessing or using our website, located at <a href="https://www.portfoliogg.com" className="text-blue-600 hover:underline">https://www.portfoliogg.com</a>, you agree to comply with and be bound by these Terms of Service ("Terms"). If you disagree with any part of these Terms, you may not use our service.
           </p>
         </section>
 

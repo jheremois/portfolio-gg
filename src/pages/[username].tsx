@@ -305,7 +305,7 @@ function getSocialIcon(platform: string) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { username } = context.params as { username: string };
-    const res = await fetch(`https://portfoliogg.com/api/profiles/${username}`);
+    const res = await fetch(`https://www.portfoliogg.com/api/profiles/${username}`);
     const profileData = await res.json();
 
     if (!profileData || profileData.error) {
