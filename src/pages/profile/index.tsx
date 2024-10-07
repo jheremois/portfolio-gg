@@ -8,6 +8,7 @@ import Project from '@/components/Project';
 import ShareModal from '@/components/Sharemodal';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import ContactModal from '@/components/ContactButton';
 
 // Definimos las interfaces para nuestros nuevos tipos de datos
 interface Skill {
@@ -37,7 +38,8 @@ export default function Profile() {
     skills_section_name: "Skills",
     projects_section_name: "Portfolio",
     education_section_name: "Education",
-    experience_section_name: "Experience"
+    experience_section_name: "Experience",
+    formspark: ""
   });
   const [portfolioItems, setPortfolioItems] = useState([]);
 
@@ -95,7 +97,8 @@ export default function Profile() {
             skills_section_name: data.skills_section_name,
             projects_section_name: data.projects_section_name,
             education_section_name: data.education_section_name,
-            experience_section_name: data.experience_section_name
+            experience_section_name: data.experience_section_name,
+            formspark: data.formspark
           })
           setSkills(data.skills);
           setProfileLoaded(true);
@@ -290,7 +293,14 @@ export default function Profile() {
                           })
                         }
                       </div>
-                      <ShareModal username={profileData.username} />
+                      <div className="w-full">
+                        <ShareModal username={profileData.username} />
+                        {profileData.formspark && (
+                          <div className="mt-4">
+                            <ContactModal username={profileData.username} formsparkId={profileData.formspark} />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </motion.div>

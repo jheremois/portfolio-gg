@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import SEOMetadata from './SeoMetadata'
+import { EnvelopeClosedIcon } from '@radix-ui/react-icons'
 
 interface Step {
     title: string;
@@ -193,6 +194,7 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
 
     const tabs = [
         { name: 'Profile', path: '/profile/edit', icon: User },
+        { name: 'Contact', path: '/profile/edit-contact', icon: EnvelopeClosedIcon },
         { name: 'Details', path: '/profile/edit-details', icon: FileText },
         { name: 'Projects', path: '/profile/edit-portfolio-item/list', icon: Briefcase },
     ]

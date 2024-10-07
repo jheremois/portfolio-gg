@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Fetch user data
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('id, username, name, profession, description, profile_image, education_section_name, experience_section_name, skills_section_name, projects_section_name')
+      .select('id, username, name, profession, description, profile_image, education_section_name, experience_section_name, skills_section_name, projects_section_name, formspark')
       .eq('email', session.user.email)
       .single();
 

@@ -26,7 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         experience_section_name, 
         education_section_name,
         skills_section_name,
-        projects_section_name
+        projects_section_name,
+        formspark
       `)
       .eq('username', username)
       .single();

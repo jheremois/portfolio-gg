@@ -5,6 +5,7 @@ import Project from '@/components/Project';
 import ShareModal from '@/components/Sharemodal';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import ContactModal from '@/components/ContactButton';
 
 interface ClientSideWrapperProps {
     children: React.ReactNode;
@@ -79,6 +80,7 @@ interface ProfileData {
         description: string;
         created_at: string;
     }[];
+    formspark: string;
 }
 
 interface PublicProfileProps {
@@ -150,6 +152,11 @@ export default function PublicProfile({ profileData }: PublicProfileProps) {
                                         ))}
                                     </div>
                                     <ShareModal username={profileData.username} />
+                                    {profileData.formspark && (
+                                        <div className="mt-4">
+                                            <ContactModal username={profileData.username} formsparkId={profileData.formspark} />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
