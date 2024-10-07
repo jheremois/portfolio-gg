@@ -126,7 +126,7 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
-                        className="bg-card text-title border-gray-200/20 rounded-2xl shadow-xl w-[95vw] max-w-4xl max-h-[90vh] overflow-hidden"
+                        className="bg-card text-title border-gray-200/20 rounded-2xl shadow-xl w-[95vw] max-w-4xl max-h-[70vh] lg:max-h-[90vh] overflow-hidden"
                     >
                         <div className="flex flex-col h-full">
                             <div className="flex justify-between items-center p-6 border-b border-gray-200/20">
