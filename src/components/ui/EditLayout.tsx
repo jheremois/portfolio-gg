@@ -84,7 +84,7 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
             <p class="mt-6">Keep updating your profile as you grow and complete new projects.</p>
           </div>
           `,
-            video: "https://www.youtube.com/embed/gmmPmnKFsTQ"
+            video: "https://www.youtube.com/embed/ejTRNkDBmjs"
         },
     ];
 
