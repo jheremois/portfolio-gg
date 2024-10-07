@@ -63,8 +63,8 @@ export default function FloatingNavLayout({ children, showNav = true }: Floating
             />
             <div className="flex flex-col h-screen">
                 {showNav && (
-                    <div className="flex-shrink-0 z-50 bg-sidebar border-b-2 border-border lg:bg-transparent lg:fixed lg:w-full lg:border-b-0 lg:border-border/0">
-                        <div className="h-20 flex justify-center items-center gap-4">
+                    <div className="flex-shrink-0 z-50 bg-sidebar h-20 lg:bg-transparent lg:fixed lg:w-full lg:border-b-0 lg:border-border/0">
+                        <div className="h-20 flex justify-center items-center gap-4 fixed w-full bg-sidebar border-b-2 border-border">
                             <nav className="z-50 rounded-xl p-2 bg-card border-2 border-white/10 shadow-lg">
                                 <div className="flex items-center space-x-1">
                                     {navItems.map((item) => (

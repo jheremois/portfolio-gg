@@ -65,7 +65,7 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
               <li><strong>Add New Project:</strong> Upload an image, title, description, and link for new projects.</li>
               <li><strong>Edit Projects:</strong> Click the pencil icon to update the details of any project.</li>
               <li><strong>Delete Projects:</strong> Remove a project by clicking the red trash icon.</li>
-              <li><strong>Rename Section:</strong> Change the "Projects" name to fit what you’re showcasing.</li>
+              <li><strong>Rename Section:</strong> Change the "Projects" name to fit what you're showcasing.</li>
             </ol>
             <p class="mt-6">Keep your portfolio fresh by regularly adding and updating your projects.</p>
           </div>
@@ -126,7 +126,7 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
-                        className="bg-card text-title border-gray-200/20 rounded-2xl shadow-xl w-[95vw] max-w-4xl max-h-[70vh] lg:max-h-[90vh] overflow-hidden"
+                        className="bg-card text-title border-gray-200/20 rounded-2xl shadow-xl w-[95vw] max-w-4xl max-h-[90vh] overflow-hidden"
                     >
                         <div className="flex flex-col h-full">
                             <div className="flex justify-between items-center p-6 border-b border-gray-200/20">
@@ -248,25 +248,27 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                 {showWalkthrough && <FirstTimeWalkthrough onComplete={handleWalkthroughComplete} />}
 
                 {/* Mobile Tabs */}
-                <div className="md:hidden z-50 bg-sidebar bottom-0 w-full fixed text-text shadow-md border-t-2 border-white/20">
-                    <nav className="flex justify-around py-2">
-                        {tabs.map((tab) => (
-                            <Link key={tab.path} href={tab.path}>
-                                <span
-                                    className={`flex flex-col items-center py-2 px-3 rounded-md text-sm font-medium transition duration-200 ${
-                                        activeTab === tab.path
-                                            ? 'bg-muted text-white'
-                                            : 'text-text hover:bg-muted/80'
-                                    }`}
-                                    onClick={() => handleTabClick(tab.path)}
-                                >
-                                    <tab.icon className="h-5 w-5 mb-1" />
-                                    {tab.name}
-                                </span>
-                            </Link>
-                        ))}
-                    </nav>
-                </div>
+                {!showWalkthrough && (
+                    <div className="md:hidden z-50 bg-sidebar bottom-0 w-full fixed text-text shadow-md border-t-2 border-white/20">
+                        <nav className="flex justify-around py-2">
+                            {tabs.map((tab) => (
+                                <Link key={tab.path} href={tab.path}>
+                                    <span
+                                        className={`flex flex-col items-center py-2 px-3 rounded-md text-sm font-medium transition duration-200 ${
+                                            activeTab === tab.path
+                                                ? 'bg-muted text-white'
+                                                : 'text-text hover:bg-muted/80'
+                                        }`}
+                                        onClick={() => handleTabClick(tab.path)}
+                                    >
+                                        <tab.icon className="h-5 w-5 mb-1" />
+                                        {tab.name}
+                                    </span>
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+                )}
 
                 <div className="flex flex-1">
                     {/* Side Navigation (visible on desktop) */}
@@ -359,7 +361,7 @@ export default function EditLayout({ children }: { children: React.ReactNode }) 
                     </nav>
 
                     {/* Main Content Area */}
-                    <main className="flex-1 px-4 md:px-8 pt-4 pb-20 md:p-20 overflow-y-auto bg-background">
+                    <main className={`flex-1 px-4 md:px-8 pt-4 ${!showWalkthrough ? 'pb-20' : ''} md:p-20 overflow-y-auto bg-background`}>
                         {children}
                     </main>
                 </div>
