@@ -76,7 +76,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
         } catch (error) {
             console.error('Error fetching profile data:', error);
             toast.error('An error occurred while loading profile data.');
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     };
@@ -215,12 +215,12 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                 <div>
                                     <label htmlFor="username" className="block text-sm font-medium mb-2">Username (unique, no spaces or special characters)</label>
                                     <div className="flex">
-                                        <span className="inline-flex items-center px-3 rounded-l-md border-2 border-r-0 border-border bg-input text-gray-100 sm:text-sm">www.portfoliogg.com/</span>
+                                        {/* <span className="inline-flex items-center px-3 rounded-l-md border-2 border-r-0 border-border bg-input text-gray-100 sm:text-sm">www.portfoliogg.com/</span> */}
                                         <Field
                                             type="text"
                                             id="username"
                                             name="username"
-                                            className="flex-1 min-w-0 block w-full px-3 py-3 rounded-none rounded-r-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         />
                                     </div>
                                     <ErrorMessage name="username" component="p" className="text-red-500 text-xs mt-1" />
@@ -263,29 +263,36 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                         {({ remove, push }) => (
                                             <div>
                                                 {values.socialLinks.map((_, index) => (
-                                                    <div key={index} className="flex flex-wrap items-center gap-2 mb-2">
-                                                        <Field
-                                                            as="select"
-                                                            name={`socialLinks.${index}.platform`}
-                                                            className="flex-1 px-3 py-2 rounded-lg lg:max-w-fit bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                                        >
-                                                            <option value="">Select Platform</option>
-                                                            {socialPlatforms.map((platform) => (
-                                                                <option key={platform} value={platform}>{platform}</option>
-                                                            ))}
-                                                        </Field>
+                                                    <div key={index} className="flex flex-col md:flex-row mb-4 bg-card px-2 py-3 rounded-lg border-border border-2">
+                                                        <div className="relative w-full mb-2 md:mb-0 md:mr-2">
+                                                            <Field
+                                                                as="select"
+                                                                name={`socialLinks.${index}.platform`}
+                                                                className="w-full px-4 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base appearance-none"
+                                                            >
+                                                                <option value="">Select Platform</option>
+                                                                {socialPlatforms.map((platform) => (
+                                                                    <option key={platform} value={platform}>{platform}</option>
+                                                                ))}
+                                                            </Field>
+                                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                                                </svg>
+                                                            </div>
+                                                        </div>
                                                         <Field
                                                             name={`socialLinks.${index}.link`}
                                                             type="text"
                                                             placeholder="Link"
-                                                            className="flex-1 px-3 py-2 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                                            className="w-full px-4 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base mb-2 md:mb-0 md:mr-2"
                                                         />
                                                         <button
                                                             type="button"
                                                             onClick={() => remove(index)}
-                                                            className="p-3 bg-red-500 h-full text-white rounded-lg hover:bg-red-600"
+                                                            className="w-full md:w-auto px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 text-base"
                                                         >
-                                                            <TrashIcon size={16} />
+                                                            Remove
                                                         </button>
                                                     </div>
                                                 ))}
@@ -294,9 +301,9 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                                 <button
                                                     type="button"
                                                     onClick={() => push({ platform: '', link: '' })}
-                                                    className="cursor-pointer mb-2 bg-input border-2 rounded-lg border-border text-text py-3 px-10 mx-auto lg:mx-0 w-full mt-2 flex justify-center"
+                                                    className="w-full px-4 py-3 bg-input border-2 rounded-lg border-border text-text text-base mt-2 flex justify-center items-center"
                                                 >
-                                                    <PlusIcon size={16} className="mr-1" /> Add Social Link
+                                                    <PlusIcon size={20} className="mr-2" /> Add Social Link
                                                 </button>
                                             </div>
                                         )}

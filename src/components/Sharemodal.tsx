@@ -11,7 +11,7 @@ interface ShareModalProps {
 
 export default function ShareModal({ username }: ShareModalProps) {
     const [open, setOpen] = useState(false)
-    const profileUrl = `https://www.portfoliogg.com/${username}`
+    const profileUrl = `https://www.portfoliogg.com/jheremois/${username}`
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(profileUrl)

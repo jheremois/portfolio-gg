@@ -238,11 +238,17 @@ export default function Profile() {
     return (
         <EditLayout>
             <div className="mx-auto max-w-6xl text-text py-8">
-                <div className="grid gap-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex justify-between items-center mb-4">
+                <div className="w-full">
+                    <div 
+                        className="
+                            flex w-full justify-between mb-8 flex-col items-start 
+                            lg:items-center lg:gap-2 lg:mb-4 lg:flex-row gap-4
+                            divide-y-2 lg:divide-y-0 divide-border
+                        "
+                    >
+                        <div className="flex justify-between items-center mb-4 w-full lg:w-fit">
                             {isEditingSectionName ? (
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 w-full">
                                     <input
                                         type="text"
                                         value={newSectionName}
@@ -257,7 +263,7 @@ export default function Profile() {
                                     </button>
                                 </div>
                             ) : (
-                                <div className='flex gap-4 items-center'>
+                                <div className="flex justify-between flex-col w-full items-start lg:items-center gap-2 lg:flex-row">
                                     <h2 className="text-2xl font-semibold">{projectsSectionName}</h2>
                                     <button
                                         onClick={handleEditSectionName}
@@ -271,14 +277,16 @@ export default function Profile() {
                                 </div>
                             )}
                         </div>
-                        <div>
+                        <div className='w-full py-8 lg:w-fit'>
                             <Link href="/profile/edit-new-project">
-                                <button className='bg-primary border-2 border-gray-300/20 py-3 px-6 rounded-2xl text-title font-semibold'>
+                                <button className='bg-primary w-full border-2 border-gray-300/20 py-3 px-6 rounded-2xl text-title font-semibold'>
                                     Add project
                                 </button>
                             </Link>
                         </div>
                     </div>
+                </div>
+                <div className="grid gap-6">
                     <div className="projectList grid md:grid-cols-3 gap-7">
                         {portfolioItems.map((item: any) => (
                             <Project

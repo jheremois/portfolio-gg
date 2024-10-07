@@ -440,7 +440,7 @@ export default function EditProfile() {
             <div className="max-w-4xl mx-auto px-4 py-12 text-text">
                 <h1 className="text-3xl font-bold mb-8">Edit Profile Details</h1>
                 <section className="my-8 px-1">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between mb-8 flex-col items-start lg:items-center gap-2 lg:mb-4 lg:flex-row">
                         <h2 className="text-2xl font-semibold mb-4">{userData!.skillsSectionName} ({userData?.skills.length}/{MAX_SKILLS})</h2>
                         <button
                             onClick={() => openSectionNameModal('skills')}
@@ -453,7 +453,7 @@ export default function EditProfile() {
                         </button>
                     </div>
                     <form onSubmit={handleAddSkill} className="mb-4">
-                        <div className="flex gap-2 items-center">
+                        <div className="flex gap-2 items-center flex-col lg:flex-row">
                             <input
                                 type="text"
                                 value={newSkill}
@@ -502,7 +502,7 @@ export default function EditProfile() {
                 </section>
                 <hr className='border-t-[3px] border-gray-100/10' />
                 <section className="my-8 px-1">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between mb-8 flex-col items-start lg:items-center gap-2 lg:mb-4 lg:flex-row">
                         <h2 className="text-2xl font-semibold">{userData!.experienceSectionName} ({userData!.experienceItems.length}/{MAX_ITEMS})</h2>
                         <button
                             onClick={() => openSectionNameModal('experience')}
@@ -597,7 +597,7 @@ export default function EditProfile() {
 
                 <hr className='border-t-[3px] border-gray-100/10' />
                 <section className="my-8 px-1">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between mb-8 flex-col items-start lg:items-center gap-2 lg:mb-4 lg:flex-row">
                         <h2 className="text-2xl font-semibold">{userData!.educationSectionName} ({userData!.educationItems.length}/{MAX_ITEMS})</h2>
                         <button
                             onClick={() => openSectionNameModal('education')}

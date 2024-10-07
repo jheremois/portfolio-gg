@@ -39,7 +39,7 @@ const config: Config = {
 			buttonsSecondary: "#131315",
 			muted: "#252527",
 			card: "#111113",
-			input: "#070708",
+			input: "#303030",
 			sidebar: "#02040a",
 			border: "#2a2a2c",
 			background: "#070708",

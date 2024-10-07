@@ -186,7 +186,7 @@ export default function CreatePortfolioItem() {
 
                   <div>
                     <label className="block text-sm font-medium mb-2 text-gray-300">Project Image</label>
-                    <div className="flex items-center space-x-6">
+                    <div className="flex lg:items-center flex-col lg:flex-row items-start gap-6">
                       <div 
                         className={`w-64 h-64 flex-shrink-0 rounded-lg overflow-hidden transition-all duration-300 ease-in-out ${
                           isDragging 
