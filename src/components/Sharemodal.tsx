@@ -11,7 +11,7 @@ interface ShareModalProps {
 
 export default function ShareModal({ username }: ShareModalProps) {
     const [open, setOpen] = useState(false)
-    const profileUrl = `https://portfolio-gg-eta.vercel.app/${username}`
+    const profileUrl = `https://portfoliogg.com/${username}`
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(profileUrl)

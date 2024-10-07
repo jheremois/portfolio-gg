@@ -51,7 +51,7 @@ export default function FloatingNavLayout({ children, showNav = true }: Floating
         <SEOMetadata
         title="Portfoliogg - Create Your Professional Portfolio"
         description="Portfoliogg is a user-friendly platform for creating and sharing professional portfolios. Showcase your skills, projects, and achievements with ease."
-        canonicalUrl="https://portfolio-gg-eta.vercel.app/"
+        canonicalUrl="https://portfoliogg.com/"
       />
             <div className="min-h-screen">
                 {showNav && (
