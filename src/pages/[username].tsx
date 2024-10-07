@@ -151,12 +151,14 @@ export default function PublicProfile({ profileData }: PublicProfileProps) {
                                             </Link>
                                         ))}
                                     </div>
-                                    <ShareModal username={profileData.username} />
-                                    {profileData.formspark && (
-                                        <div className="mt-4">
-                                            <ContactModal username={profileData.username} formsparkId={profileData.formspark} />
-                                        </div>
-                                    )}
+                                    <div className="w-full">
+                                        <ShareModal username={profileData.username} />
+                                        {profileData.formspark && (
+                                            <div className="mt-4">
+                                                <ContactModal username={profileData.username} formsparkId={profileData.formspark} />
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
