@@ -9,7 +9,7 @@ export default function Home() {
     <SEOMetadata
         title="Portfoliogg - Create Your Professional Portfolio"
         description="Portfoliogg is a user-friendly platform for creating and sharing professional portfolios. Showcase your skills, projects, and achievements with ease."
-        canonicalUrl="https://www.portfoliogg.com/jheremois/"
+        canonicalUrl="https://www.portfoliogg.com/"
       />
       <LoginPage/>
     </>
