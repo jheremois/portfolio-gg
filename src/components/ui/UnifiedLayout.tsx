@@ -20,7 +20,7 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const { userData, loading, error } = useUser()
     const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
-    const [showWalkthrough, setShowWalkthrough] = useState(true)
+    const [showWalkthrough, setShowWalkthrough] = useState(false)
 
     const tabs = [
         { name: 'Profile', path: '/profile/edit', icon: User },
@@ -73,10 +73,12 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
 
     useEffect(() => {
         const walkthroughCompleted = localStorage.getItem('walkthroughCompleted')
-        if (walkthroughCompleted === 'true') {
+        if (pathname && pathname.includes('/edit') && walkthroughCompleted !== 'true') {
+            setShowWalkthrough(true)
+        } else {
             setShowWalkthrough(false)
         }
-    }, [])
+    }, [pathname])
 
     const isActive = (path: string) => {
         if (!pathname) return false
@@ -98,11 +100,11 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                 description="Portfoliogg is a user-friendly platform for creating and sharing professional portfolios. Showcase your skills, projects, and achievements with ease."
                 canonicalUrl="https://www.portfoliogg.com/"
             />
-            <div className="flex flex-col min-h-screen max-h-screen">
+            <div className="flex flex-col min-h-screen">
                 {showWalkthrough && <FirstTimeWalkthrough onComplete={handleWalkthroughComplete} />}
 
                 {shouldShowNavAndSidebar && (
-                    <div className="flex-shrink-0 z-50 bg-sidebar h-20 lg:bg-transparent lg:w-full lg:border-b-0 lg:border-border/0">
+                    <div className="sticky top-0 z-50 bg-sidebar h-20 lg:bg-transparent lg:w-full lg:border-b-0 lg:border-border/0">
                         <div className="h-20 flex justify-center items-center gap-4 w-full bg-sidebar border-b-2 border-border">
                             <nav className="z-50 rounded-xl p-2 bg-card border-2 border-white/10 shadow-lg">
                                 <div className="flex items-center space-x-1">
@@ -134,7 +136,7 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                                             </svg>
                                         </button>
                                     </DialogTrigger>
-                                    <DialogContent  className='bg-card text-title border-gray-200/20'>
+                                    <DialogContent className='bg-card text-title border-gray-200/20'>
                                         <DialogHeader>
                                             <DialogTitle>Are you sure you want to log out?</DialogTitle>
                                             <DialogDescription className='text-text'>
@@ -254,20 +256,22 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                     )}
 
                     {/* Main Content Area */}
-                    <main className={`flex-1 px-4 md:px-8 pt-4 ${!showWalkthrough ? 'pb-20' : ''} md:p-20 overflow-y-auto bg-background`}>
-                        {children}
+                    <main className="flex-1 overflow-y-auto bg-background">
+                        <div className="px-4 md:px-8 pt-4 pb-24 md:pb-20 md:p-20">
+                            {children}
+                        </div>
                     </main>
                 </div>
-                
+
                 {shouldShowNavAndSidebar && pathname && pathname.includes('/edit') && (
-                    <div className="md:hidden z-50 bg-sidebar bottom-0 w-full text-text shadow-md border-t-2 border-white/20">
+                    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-sidebar text-text shadow-md border-t-2 border-white/20">
                         <nav className="flex justify-around py-2">
                             {tabs.map((tab) => (
                                 <Link key={tab.path} href={tab.path}>
                                     <span
-                                        className={`flex flex-col items-center py-2 px-3 rounded-md text-sm font-medium transition duration-200  ${
+                                        className={`flex  flex-col items-center py-2 px-3 rounded-md text-sm font-medium transition duration-200 ${
                                             activeTab === tab.path
-                                                ?   'bg-muted text-white'
+                                                ? 'bg-muted text-white'
                                                 : 'text-text hover:bg-muted/80'
                                         }`}
                                         onClick={() => handleTabClick(tab.path)}
@@ -280,7 +284,6 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                         </nav>
                     </div>
                 )}
-                
             </div>
         </>
     )
