@@ -1,12 +1,9 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import EditLayout from '@/components/ui/EditLayout'
 import { Loader2 } from 'lucide-react'
 
 const validationSchema = Yup.object().shape({
@@ -115,21 +112,18 @@ export default function EditPortfolioItem() {
 
     if (isLoading) {
         return (
-            <EditLayout>
                 <div className="min-h-screen text-text flex items-center justify-center">
                     <Loader2 className="w-8 h-8 animate-spin" />
                 </div>
-            </EditLayout>
         )
     }
 
     if (!portfolioItem) {
         return (
-            <EditLayout>
+
                 <div className="min-h-screen text-text flex items-center justify-center">
                     Portfolio item not found
                 </div>
-            </EditLayout>
         )
     }
 
