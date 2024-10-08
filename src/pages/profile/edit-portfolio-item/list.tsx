@@ -201,45 +201,43 @@ export default function Profile() {
 
     if (status === 'loading' || isLoading) {
         return (
-            <EditLayout>
-                <div className="flex flex-col items-center justify-center min-h-[40rem] bg-background text-title">
+            <div className="flex flex-col items-center justify-center min-h-[40rem] bg-background text-title">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="relative w-32 h-32"
+                >
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="relative w-32 h-32"
-                    >
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-0 border-t-4 border-blue-500 rounded-full"
-                        ></motion.div>
-                        <Image
-                            src="/gg-studio-logo.svg"
-                            alt="Geek Guys Studio Logo"
-                            width={80}
-                            height={80}
-                            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                        />
-                    </motion.div>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5, duration: 0.5 }}
-                        className="mt-4 text-lg font-medium text-gray-300"
-                    >
-                        Loading your profile information...
-                    </motion.p>
-                </div>
-            </EditLayout>
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-0 border-t-4 border-blue-500 rounded-full"
+                    ></motion.div>
+                    <Image
+                        src="/gg-studio-logo.svg"
+                        alt="Geek Guys Studio Logo"
+                        width={80}
+                        height={80}
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                </motion.div>
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="mt-4 text-lg font-medium text-gray-300"
+                >
+                    Loading your profile information...
+                </motion.p>
+            </div>
         )
     }
 
     return (
-        <EditLayout>
+        <>
             <div className="mx-auto max-w-6xl text-text py-8">
                 <div className="w-full">
-                    <div 
+                    <div
                         className="
                             flex w-full justify-between mb-8 flex-col items-start 
                             lg:items-center lg:gap-2 lg:mb-4 lg:flex-row gap-4
@@ -309,6 +307,6 @@ export default function Profile() {
                 onClose={() => setIsDeleteModalOpen(false)}
                 onConfirm={confirmDelete}
             />
-        </EditLayout>
+        </>
     )
 }

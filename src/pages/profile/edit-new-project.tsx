@@ -100,7 +100,6 @@ export default function CreatePortfolioItem() {
   }
 
   return (
-    <EditLayout>
       <div className="min-h-screen text-text p-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">Create New Portfolio Item</h1>
@@ -288,6 +287,5 @@ export default function CreatePortfolioItem() {
           </Formik>
         </div>
       </div>
-    </EditLayout>
   );
 }

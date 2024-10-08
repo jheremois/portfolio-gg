@@ -75,7 +75,7 @@ const Project = (prjct: ProjectProperties) => {
                                 </div>
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="absolute top-4 right-4 p-2 rounded-full bg-black/60 hover:bg-black transition-colors duration-200"
+                                    className="absolute top-3 right-4 p-2 z-30 rounded-full bg-black ring-2 ring-white/40 transition-colors duration-200"
                                 >
                                     <XMarkIcon className="w-6 h-6 text-white" />
                                 </button>
@@ -93,7 +93,7 @@ const Project = (prjct: ProjectProperties) => {
                                                 bg-white text-neutral-900 hover:bg-gray-200 transition-colors duration-200
                                             "
                                         >
-                                            Visit Project
+                                            Open
                                             <div
                                                 className="
                                                     rounded-full font-semibold flex items-center justify-center

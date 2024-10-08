@@ -314,7 +314,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
     }
 
-    console.log('Profile Data:', profileData);
+    /* console.log('Profile Data:', profileData); */
 
     return {
         props: { profileData },
