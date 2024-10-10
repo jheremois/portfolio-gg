@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.portfoliogg.com
+
+# Sitemaps
+Sitemap: https://www.portfoliogg.com/sitemap.xml
+Sitemap: https://www.portfoliogg.com/server-sitemap.xml
