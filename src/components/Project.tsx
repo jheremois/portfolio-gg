@@ -26,12 +26,12 @@ const Project = (prjct: ProjectProperties) => {
                     backgroundColor: prjct.bgColor,
                     backgroundPosition: "0px 0px"
                 }}
-                className="moveTopDel w-full rounded-3xl h-[22rem] relative border-4 border-border bg-no-repeat bg-cover overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-105"
+                className="moveTopDel w-full rounded-3xl h-[22rem] relative border-4 border-border bg-no-repeat bg-cover overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-[1.01]"
                 onClick={() => setIsModalOpen(true)}
                 onLoad={prjct.onLoad}
             >
                 <div
-                    className="p-6 bg-neutral-900/85 max-h-24 border-t-2 border-border backdrop-blur-lg bottom-0 absolute w-full transition-all duration-300 hover:max-h-full group"
+                    className="p-6 bg-border max-h-24 border-t-2 border-border backdrop-blur-lg bottom-0 absolute w-full transition-all duration-300 hover:max-h-full group"
                 >
                     <div
                         className="flex items-center gap-2 justify-between"

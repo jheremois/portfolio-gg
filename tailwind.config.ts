@@ -34,8 +34,9 @@ const config: Config = {
 		  colors: {
 			title: '#F4F4F4',
   			text: '#e5e7ebf2',
-			buttons: "#3399ff",
-			primary: "#3399ff",
+			buttons: "#2563eb",
+			primary: "#2563eb",
+			/* primary: "#3399ff", */
 			buttonsSecondary: "#131315",
 			muted: "#252527",
 			card: "#111113",

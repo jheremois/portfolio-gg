@@ -73,7 +73,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/')
+      router.push('/login');
     } else if (status === 'authenticated' && session?.user) {
       fetchProfileData()
     }

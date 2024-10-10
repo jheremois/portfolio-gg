@@ -92,7 +92,7 @@ export default function ContactModal({ username, formsparkId }: ContactModalProp
                         type="text"
                         name="name"
                         id="name"
-                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       />
                       <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1" />
                     </div>
@@ -105,7 +105,7 @@ export default function ContactModal({ username, formsparkId }: ContactModalProp
                         type="email"
                         name="email"
                         id="email"
-                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       />
                       <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
                     </div>
@@ -119,7 +119,7 @@ export default function ContactModal({ username, formsparkId }: ContactModalProp
                         name="message"
                         id="message"
                         rows={4}
-                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       />
                       <ErrorMessage name="message" component="div" className="text-red-500 text-sm mt-1" />
                     </div>

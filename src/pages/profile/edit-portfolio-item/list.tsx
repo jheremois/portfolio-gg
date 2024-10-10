@@ -47,7 +47,7 @@ const Project = ({ id, imgBg, title, bgColor, onEdit, onDelete }: ProjectPropert
                 </div>
             </div>
             <div
-                className="p-6 bg-neutral-900/85 max-h-24 border-t-2 border-border backdrop-blur-lg bottom-0 absolute w-full transition-all duration-300 hover:max-h-full group"
+                className="p-6 bg-muted max-h-24 border-t-2 border-border backdrop-blur-lg bottom-0 absolute w-full transition-all duration-300 hover:max-h-full group"
             >
                 <div className="flex items-start gap-2 justify-between">
                     <div>
@@ -78,7 +78,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ isOpe
                 <DialogFooter className='gap-3'>
                     <button
                         className='
-                            bg-secondary border-2 border-gray-300/20 
+                            bg-buttonsSecondary border-2 border-gray-300/20 
                             py-2 px-4 rounded-xl text-title font-semibold
                         '
                         onClick={onClose}
@@ -132,7 +132,7 @@ export default function Profile() {
 
     useEffect(() => {
         if (status === 'unauthenticated') {
-            router.push('/')
+            router.push('/login');
         } else if (status === 'authenticated' && session?.user) {
             fetchPortfolioItems()
         }
@@ -244,14 +244,14 @@ export default function Profile() {
                             divide-y-2 lg:divide-y-0 divide-border
                         "
                     >
-                        <div className="flex justify-between items-center mb-4 w-full lg:w-fit">
+                        <div className="flex justify-between items-center mb-4 lg:mb-0 w-full lg:w-fit">
                             {isEditingSectionName ? (
                                 <div className="flex items-center gap-2 w-full">
                                     <input
                                         type="text"
                                         value={newSectionName}
                                         onChange={(e) => setNewSectionName(e.target.value)}
-                                        className="bg-input border-2 border-border rounded-lg px-2 py-1 text-text"
+                                        className="bg-input border-2 border-white/20 rounded-lg px-2 py-1 text-text"
                                     />
                                     <button
                                         onClick={handleSaveSectionName}

@@ -33,7 +33,7 @@ export default function EditPortfolioItem() {
 
     useEffect(() => {
         if (status === 'unauthenticated') {
-            router.push('/')
+            router.push('/login');
         } else if (status === 'authenticated' && id) {
             fetchPortfolioItem()
         }

@@ -157,8 +157,8 @@ const Login = () => {
                                     Privacy Policy
                                 </a>
                             </p>
-                            <p className="mt-2 text-center text-base text-gray-400">
-                                By <strong className='text-[#725cf7] underline'> <Link target='_blank' href="https://www.geekguysstudio.com/es"> Geek Guys Studio</Link></strong> 
+                            <p className="mt-8 text-center text-base text-gray-400">
+                                By <strong className='text-[#afa1fd] underline'> <Link target='_blank' href="https://www.geekguysstudio.com/es"> Geek Guys Studio</Link></strong> 
                             </p>
                         </div>
                     </div>

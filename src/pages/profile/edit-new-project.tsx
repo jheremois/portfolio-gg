@@ -23,7 +23,7 @@ export default function CreatePortfolioItem() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/');
+      router.push('/login');
     } else {
       setIsLoading(false);
     }

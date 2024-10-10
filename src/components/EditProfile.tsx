@@ -49,7 +49,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
 
     useEffect(() => {
         if (status === 'unauthenticated') {
-            router.push('/');
+            router.push('/login');
         } else if (status === 'authenticated' && session?.user) {
             fetchProfileData();
         }
@@ -220,7 +220,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                             type="text"
                                             id="username"
                                             name="username"
-                                            className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         />
                                     </div>
                                     <ErrorMessage name="username" component="p" className="text-red-500 text-xs mt-1" />
@@ -232,7 +232,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                             type="text"
                                             id="fullName"
                                             name="fullName"
-                                            className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         />
                                         <ErrorMessage name="fullName" component="p" className="text-red-500 text-xs mt-1" />
                                     </div>
@@ -242,7 +242,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                             type="text"
                                             id="profession"
                                             name="profession"
-                                            className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         />
                                         <ErrorMessage name="profession" component="p" className="text-red-500 text-xs mt-1" />
                                     </div>
@@ -253,7 +253,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                         as="textarea"
                                         id="description"
                                         name="description"
-                                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                         rows={4}
                                     />
                                 </div>
@@ -268,7 +268,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                                             <Field
                                                                 as="select"
                                                                 name={`socialLinks.${index}.platform`}
-                                                                className="w-full px-4 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base appearance-none"
+                                                                className="w-full px-4 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base appearance-none"
                                                             >
                                                                 <option value="">Select Platform</option>
                                                                 {socialPlatforms.map((platform) => (
@@ -285,7 +285,7 @@ export default function EditProfile({ funcion }: EditProfileProps) {
                                                             name={`socialLinks.${index}.link`}
                                                             type="text"
                                                             placeholder="Link"
-                                                            className="w-full px-4 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base mb-2 md:mb-0 md:mr-2"
+                                                            className="w-full px-4 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base mb-2 md:mb-0 md:mr-2"
                                                         />
                                                         <button
                                                             type="button"

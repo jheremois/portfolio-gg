@@ -77,7 +77,7 @@ export default function EditProfile() {
 
     useEffect(() => {
         if (status === 'unauthenticated') {
-            router.push('/')
+            router.push('/login')
         } else if (status === 'authenticated') {
             fetchUserData()
         }
@@ -461,7 +461,7 @@ export default function EditProfile() {
                             placeholder="Enter a new skill"
                             className="
                                 flex-1 min-w-0 block w-full px-3 py-3 rounded-lg 
-                                bg-input border-2 border-border text-text focus:ring-2 
+                                bg-input border-2 border-white/20 text-text focus:ring-2 
                                 focus:ring-blue-500 focus:border-blue-500 sm:text-sm
                             "
                             disabled={userData!.skills.length >= MAX_SKILLS}
@@ -556,7 +556,7 @@ export default function EditProfile() {
                                         validateSectionItem({ ...newExperienceItem, title: e.target.value }, 'experience')
                                     }}
                                     placeholder="Title"
-                                    className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                 />
                                 {formErrors.title && <p className="text-red-500 mb-2">{formErrors.title}</p>}
                                 <textarea
@@ -566,7 +566,7 @@ export default function EditProfile() {
                                         validateSectionItem({ ...newExperienceItem, description: e.target.value }, 'experience')
                                     }}
                                     placeholder="Description"
-                                    className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     rows={3}
                                 />
                                 {formErrors.description && <p className="text-red-500 mb-2">{formErrors.description}</p>}
@@ -651,7 +651,7 @@ export default function EditProfile() {
                                         validateSectionItem({ ...newEducationItem, title: e.target.value }, 'education')
                                     }}
                                     placeholder="Title"
-                                    className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                 />
                                 {formErrors.title && <p className="text-red-500 mb-2">{formErrors.title}</p>}
                                 <textarea
@@ -661,7 +661,7 @@ export default function EditProfile() {
                                         validateSectionItem({ ...newEducationItem, description: e.target.value }, 'education')
                                     }}
                                     placeholder="Description"
-                                    className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    className="flex-1 min-w-0 mb-3 block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     rows={3}
                                 />
                                 {formErrors.description && <p className="text-red-500 mb-2">{formErrors.description}</p>}

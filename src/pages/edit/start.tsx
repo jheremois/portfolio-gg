@@ -12,7 +12,7 @@ export default function FirstTimeSetup() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/')
+      router.push('/login')
     } else if (status === 'authenticated' && session?.user) {
       checkProfileCompletion()
     }

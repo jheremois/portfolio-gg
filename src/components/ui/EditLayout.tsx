@@ -48,7 +48,7 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
 
     const handleLogout = async () => {
         setIsLogoutDialogOpen(false)
-        await signOut({ callbackUrl: '/' })
+        await signOut({ callbackUrl: '/login' })
     }
 
     useEffect(() => {

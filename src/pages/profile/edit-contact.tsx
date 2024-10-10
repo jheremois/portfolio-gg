@@ -71,7 +71,7 @@ export default function ContactSettings() {
 
   if (status === 'loading' || isLoading) {
     return (
-      <div className="flex flex-col items-center min-h-[20rem] bg-background text-title">
+      <div className="flex flex-col items-center min-h-[30rem] justify-center bg-background text-title">
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -134,7 +134,7 @@ export default function ContactSettings() {
                   type="text"
                   id="formsparkCode"
                   name="formsparkCode"
-                  className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-border text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full px-3 py-3 rounded-lg bg-input border-2 border-white/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Enter your Formspark form ID"
                 />
                 <ErrorMessage name="formsparkCode" component="p" className="text-red-500 text-xs mt-1" />

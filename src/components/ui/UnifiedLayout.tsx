@@ -48,7 +48,7 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
 
     const handleLogout = async () => {
         setIsLogoutDialogOpen(false)
-        await signOut({ callbackUrl: '/' })
+        await signOut({ callbackUrl: '/login' })
     }
 
     useEffect(() => {
@@ -104,9 +104,9 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                 {showWalkthrough && <FirstTimeWalkthrough onComplete={handleWalkthroughComplete} />}
 
                 {shouldShowNavAndSidebar && (
-                    <div className="flex-shrink-0 z-50 bg-sidebar h-20 lg:bg-transparent lg:w-full lg:border-b-0 lg:border-border/0">
-                        <div className="h-20 flex justify-center items-center gap-4 w-full bg-sidebar border-b-2 border-border">
-                            <nav className="z-50 rounded-xl p-2 bg-card border-2 border-white/10 shadow-lg">
+                    <div className="flex-shrink-0 z-50 fixed h-24 lg:bg-transparent w-full lg:border-b-0 lg:border-border/0">
+                        <div className="h-24 flex justify-center items-center gap-4 w-full">
+                            <nav className="z-50 rounded-xl p-2 bg-card/90 border-2 border-white/20 shadow-lg">
                                 <div className="flex items-center space-x-1">
                                     {navItems.map((item) => (
                                         <Link key={item.path} href={item.path}>
@@ -257,7 +257,7 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
 
                     {/* Main Content Area */}
                     <main className="flex-1 overflow-y-auto bg-background">
-                        <div className="px-4 md:px-8 pt-4 pb-20 md:p-20">
+                        <div className="px-4 md:px-8 pb-20 pt-20">
                             {children}
                         </div>
                     </main>
