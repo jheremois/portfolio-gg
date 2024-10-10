@@ -33,7 +33,7 @@ export default function Home() {
               <p className="text-xl sm:text-2xl mb-12 max-w-2xl mx-auto text-text/80">
                 Create an impactful professional profile in minutes. No hassle, completely free.
               </p>
-              <Link href="/signup" className="inline-flex items-center px-8 py-4 bg-buttons text-text rounded-full text-lg font-semibold hover:bg-primary transition duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+              <Link href="/login" className="inline-flex items-center px-8 py-4 bg-buttons text-text rounded-full text-lg font-semibold hover:bg-primary transition duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                 Get Started Now
                 <ArrowRightIcon className="ml-2 h-5 w-5" />
               </Link>
@@ -150,7 +150,7 @@ export default function Home() {
               <p className="text-xl mb-12 text-text/80">
                 Join the community of professionals who are standing out with Portfolio GG. Your future starts here.
               </p>
-              <Link href="/signup" className="inline-flex items-center px-8 py-4 bg-buttons text-title rounded-full text-lg font-semibold hover:bg-primary transition duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+              <Link href="/login" className="inline-flex items-center px-8 py-4 bg-buttons text-title rounded-full text-lg font-semibold hover:bg-primary transition duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                 Create your free portfolio
                 <ArrowRightIcon className="ml-2 h-5 w-5" />
               </Link>
