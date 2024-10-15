@@ -5,7 +5,6 @@ import SEOMetadata from "@/components/ui/SeoMetadata";
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRightIcon, SparklesIcon, BoltIcon, ShareIcon, } from '@heroicons/react/24/solid'
-import Image from "next/image";
 
 export default function Home() {
   return (
