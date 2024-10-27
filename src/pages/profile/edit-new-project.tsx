@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import EditLayout from '@/components/ui/EditLayout';
+;
 
 const validationSchema = Yup.object().shape({
   portfolio_name: Yup.string().required('Portfolio name is required').max(50, 'Name must be 50 characters or less'),

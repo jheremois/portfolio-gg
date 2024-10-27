@@ -8,7 +8,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
-import EditLayout from '@/components/ui/EditLayout'
 
 const validationSchema = Yup.object().shape({
   formsparkCode: Yup.string().required('Formspark code is required'),

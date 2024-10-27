@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 import Link from 'next/link'
-import EditLayout from '@/components/ui/EditLayout'
+
 import { PenIcon, Trash2Icon } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'

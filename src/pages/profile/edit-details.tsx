@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-hot-toast'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import EditLayout from '@/components/ui/EditLayout'
+
 import { Loader2, PenIcon, PlusIcon, Trash2Icon, XIcon } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
