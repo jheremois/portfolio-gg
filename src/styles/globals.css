@@ -28,3 +28,15 @@ body{
   }
 }
 
+
+@media (min-width: 378px) {
+  .only-320 {
+    display: block;
+  }
+}
+@media (max-width: 379px) {
+  .only-320 {
+    display: none;
+  }
+}
+

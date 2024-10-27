@@ -1,5 +1,4 @@
 import EditProfile from '@/components/EditProfile';
-import EditLayout from '@/components/ui/EditLayout';
 
 export default function UpdateUser() {
 

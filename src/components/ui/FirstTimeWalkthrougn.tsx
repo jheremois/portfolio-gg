@@ -117,14 +117,17 @@ const FirstTimeWalkthrough = ({ onComplete }: { onComplete: () => void }) => {
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
-                        className="bg-card text-title border-gray-200/20 rounded-2xl shadow-xl w-[95vw] max-w-4xl max-h-[90vh] overflow-hidden"
+                        className="bg-card text-title border-gray-200/20 rounded-2xl shadow-xl w-[95vw] max-w-4xl max-h-[90svh] overflow-hidden"
                     >
                         <div className="flex flex-col h-full">
-                            <div className="flex justify-between items-center p-6 border-b border-gray-200/20">
+                            {/* <div className="flex justify-between items-center p-6 border-b border-gray-200/20">
                                 <h2 className="text-2xl font-bold">{steps[step - 1].title}</h2>
-                            </div>
-                            <div className="flex-grow overflow-y-auto h-[60vh] p-6">
-                                <div className="prose prose-invert max-w-none">
+                            </div> */}
+                            <div className="flex-grow overflow-y-auto h-[65vh] p-5">
+                                <div className="flex justify-between items-center py-4 border-b border-gray-200/20">
+                                    <h2 className="text-2xl font-bold">{steps[step - 1].title}</h2>
+                                </div>
+                                <div className="prose prose-invert max-w-none mt-4">
                                     <div dangerouslySetInnerHTML={{ __html: steps[step - 1].description }} />
                                 </div>
                                 <div className="mt-6 flex justify-center">

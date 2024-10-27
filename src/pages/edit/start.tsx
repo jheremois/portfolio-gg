@@ -42,7 +42,7 @@ export default function FirstTimeSetup() {
   }
 
   const handleEditComplete = () => {
-    router.push('/profile')
+    router.push('/profile/edit')
   }
 
   if (isLoading) {

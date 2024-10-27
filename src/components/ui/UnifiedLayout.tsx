@@ -6,8 +6,76 @@ import { signOut } from 'next-auth/react'
 import { useUser } from '@/hooks/UserContext'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import SEOMetadata from './SeoMetadata'
-import { EnvelopeClosedIcon } from '@radix-ui/react-icons'
+import { EnvelopeClosedIcon, Share1Icon } from '@radix-ui/react-icons'
 import FirstTimeWalkthrough from './FirstTimeWalkthrougn'
+import { toast } from "react-hot-toast"
+
+import { Share, Copy } from "lucide-react"
+
+interface ShareModalProps {
+    username: string
+}
+
+function ShareModal({ username }: ShareModalProps) {
+    const [open, setOpen] = useState(false)
+    const profileUrl = `https://www.portfoliogg.com/${username}`
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(profileUrl)
+            .then(() => {
+                toast.success("URL copied to clipboard", {
+                    duration: 2000,
+                })
+            })
+            .catch((error) => {
+                console.error("Error copying URL to clipboard: ", error)
+                toast.error("Error copying URL to clipboard", {
+                    duration: 2000,
+                })
+            })
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <button
+                    className='
+                        flex items-center gap-1 bg-blue-950 shadow-lg text-blue-200
+                        p-3 py-3 rounded-full border-2 border-blue-600
+                    '
+                >
+                    <Share1Icon width={20} height={20} />
+                </button>
+            </DialogTrigger>
+            <DialogContent className="bg-card max-w-[92%] rounded-xl text-title border-border sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Share profile</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col space-y-4 py-4">
+                    <div className="flex flex-col space-y-2">
+                        <label htmlFor="profile-url" className="text-sm font-medium">
+                            Profile URL
+                        </label>
+                        <div className="flex items-center gap-2">
+                            <input
+                                id="profile-url"
+                                defaultValue={profileUrl}
+                                readOnly
+                                className="flex-1 min-w-0 block w-full px-3 py-3 rounded-lg bg-input border-2 border-gray-300/20 text-text focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            />
+                            <button
+                                className="bg-text border-2 border-white/30 text-gray-950 font-semibol w-fit rounded-lg px-4 py-3"
+                                onClick={copyToClipboard}
+                            >
+                                <Copy className="h-4 w-4" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 interface UnifiedLayoutProps {
     children: React.ReactNode;
@@ -106,16 +174,18 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                 {shouldShowNavAndSidebar && (
                     <div className="flex-shrink-0 z-50 fixed h-24 lg:bg-transparent w-full lg:border-b-0 lg:border-border/0">
                         <div className="h-24 flex justify-center items-center gap-4 w-full">
+                            <div className="only-320">
+                                <ShareModal username={userData?.username || ""}/>
+                            </div>
                             <nav className="z-50 rounded-xl p-2 bg-card/90 border-2 border-white/20 shadow-lg">
                                 <div className="flex items-center space-x-1">
                                     {navItems.map((item) => (
                                         <Link key={item.path} href={item.path}>
                                             <span
-                                                className={`flex items-center px-8 py-2 rounded-lg transition-all duration-300 ${
-                                                    isActive(item.path)
-                                                        ? 'bg-blue-600 text-white shadow-md'
-                                                        : 'text-gray-300 hover:bg-background'
-                                                }`}
+                                                className={`flex items-center px-4 lg:px-8 py-2 rounded-lg transition-all duration-300 ${isActive(item.path)
+                                                    ? 'bg-blue-600 text-white shadow-md'
+                                                    : 'text-gray-300 hover:bg-background'
+                                                    }`}
                                                 onClick={() => handleTabClick(item.path)}
                                             >
                                                 <item.icon className="h-5 w-5" aria-hidden="true" />
@@ -136,7 +206,7 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                                             </svg>
                                         </button>
                                     </DialogTrigger>
-                                    <DialogContent className='bg-card text-title border-gray-200/20'>
+                                    <DialogContent className='bg-card max-w-[90%] rounded-xl text-title border-gray-200/20'>
                                         <DialogHeader>
                                             <DialogTitle>Are you sure you want to log out?</DialogTitle>
                                             <DialogDescription className='text-text'>
@@ -231,11 +301,10 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                                         <li key={tab.path}>
                                             <Link href={tab.path}>
                                                 <span
-                                                    className={`flex items-center py-5 px-4 rounded-2xl text-xl font-semibold transition duration-200 ${
-                                                        activeTab === tab.path
-                                                            ? 'bg-muted text-white'
-                                                            : 'text-text hover:bg-muted/80'
-                                                    }`}
+                                                    className={`flex items-center py-5 px-4 rounded-2xl text-xl font-semibold transition duration-200 ${activeTab === tab.path
+                                                        ? 'bg-muted text-white'
+                                                        : 'text-text hover:bg-muted/80'
+                                                        }`}
                                                     onClick={() => handleTabClick(tab.path)}
                                                 >
                                                     <tab.icon className="mr-3 h-5 w-5" />
@@ -269,11 +338,10 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                             {tabs.map((tab) => (
                                 <Link key={tab.path} href={tab.path}>
                                     <span
-                                        className={`flex flex-col items-center py-2 px-3 rounded-md  text-sm font-medium transition duration-200  ${
-                                            activeTab === tab.path
-                                                ? 'bg-muted text-white'
-                                                : 'text-text hover:bg-muted/80'
-                                        }`}
+                                        className={`flex flex-col items-center py-2 px-3 rounded-md  text-sm font-medium transition duration-200  ${activeTab === tab.path
+                                            ? 'bg-muted text-white'
+                                            : 'text-text hover:bg-muted/80'
+                                            }`}
                                         onClick={() => handleTabClick(tab.path)}
                                     >
                                         <tab.icon className="h-5 w-5 mb-1" />
