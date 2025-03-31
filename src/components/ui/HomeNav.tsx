@@ -102,7 +102,7 @@ export default function FloatingNavLayout({ children, showNav = true }: Floating
                                             </button>
                                         </div>
                                     </DialogTrigger>
-                                    <DialogContent className='bg-card text-title border-gray-200/20'>
+                                    <DialogContent className='bg-card max-w-[90%] lg:max-w-[400px] rounded-xl text-title border-gray-200/20'>
                                         <DialogHeader>
                                             <DialogTitle>Are you sure you want to log out?</DialogTitle>
                                             <DialogDescription className='text-text'>

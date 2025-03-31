@@ -31,7 +31,7 @@ const Project = (prjct: ProjectProperties) => {
                 onLoad={prjct.onLoad}
             >
                 <div
-                    className="p-6 bg-border max-h-24 border-t-2 border-border backdrop-blur-lg bottom-0 absolute w-full transition-all duration-300 hover:max-h-full group"
+                    className="p-6 bg-[#111] max-h-24 border-t-2 border-border backdrop-blur-lg bottom-0 absolute w-full transition-all duration-300 hover:max-h-full group"
                 >
                     <div
                         className="flex items-center gap-2 justify-between"

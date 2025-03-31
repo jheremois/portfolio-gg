@@ -5,6 +5,7 @@ import SEOMetadata from "@/components/ui/SeoMetadata";
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRightIcon, SparklesIcon, BoltIcon, ShareIcon, } from '@heroicons/react/24/solid'
+import HeroSection from "@/components/home/Hero";
 
 export default function Home() {
   return (
@@ -17,40 +18,10 @@ export default function Home() {
       <Header />
       <div className="min-h-screen bg-background text-text font-body pt-12">
         {/* Hero Section */}
-        <section className="relative py-20 sm:py-32 overflow-hidden">
-          <div className="container mx-auto px-4 max-w-6xl relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
-              <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-title font-heading leading-tight">
-                Your portfolio,
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-buttons"> simplified</span>
-              </h1>
-              <p className="text-xl sm:text-2xl mb-12 max-w-2xl mx-auto text-text/80">
-                Create an impactful professional profile in minutes. No hassle, completely free.
-              </p>
-              <Link href="/login" className="inline-flex items-center px-8 py-4 bg-buttons text-text rounded-full text-lg font-semibold hover:bg-primary transition duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                Get Started Now
-                <ArrowRightIcon className="ml-2 h-5 w-5" />
-              </Link>
-            </motion.div>
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-muted to-background opacity-50"></div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.5 }}
-            className="absolute inset-0 overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
-          </motion.div>
-        </section>
+        <HeroSection/>
 
         {/* Features Section */}
-        <section className="py-24">
+       {/*  <section className="py-24">
           <div className="container mx-auto px-4 max-w-6xl">
             <h2 className="text-4xl sm:text-5xl font-bold text-center mb-16 text-title font-heading">Key Features</h2>
             <div className="grid md:grid-cols-3 gap-12">
@@ -73,10 +44,10 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* How It Works Section */}
-        <section className="py-24 bg-muted">
+       {/*  <section className="py-24 bg-muted">
           <div className="container mx-auto px-4 max-w-6xl">
             <h2 className="text-4xl sm:text-5xl font-bold text-center mb-16 text-title font-heading">How It Works</h2>
             <div className="grid md:grid-cols-3 gap-8">
@@ -103,7 +74,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Portfolio Showcase */}
         {/* <section className="py-24">
@@ -138,7 +109,7 @@ export default function Home() {
         </section> */}
 
         {/* CTA Section */}
-        <section className="py-24 bg-gradient-to-b from-background to-muted">
+      {/*   <section className="py-24 bg-gradient-to-b from-background to-muted">
           <div className="container mx-auto px-4 max-w-4xl text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -155,7 +126,7 @@ export default function Home() {
               </Link>
             </motion.div>
           </div>
-        </section>
+        </section> */}
       </div>
       <Footer />
     </>

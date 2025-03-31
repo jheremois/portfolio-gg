@@ -206,7 +206,7 @@ export default function UnifiedLayout({ children }: UnifiedLayoutProps) {
                                             </svg>
                                         </button>
                                     </DialogTrigger>
-                                    <DialogContent className='bg-card max-w-[90%] rounded-xl text-title border-gray-200/20'>
+                                    <DialogContent className='bg-card max-w-[90%] lg:max-w-[400px] rounded-xl text-title border-gray-200/20'>
                                         <DialogHeader>
                                             <DialogTitle>Are you sure you want to log out?</DialogTitle>
                                             <DialogDescription className='text-text'>

@@ -141,7 +141,7 @@ const PrivacyPolicy = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">10. Contact Us</h2>
             <p className="">
-              If you have any questions about this Privacy Policy, please contact us at <a href="mailto:jheremy@geekguysstudio.com" className="text-blue-600 hover:underline">jheremy@geekguysstudio.com</a>.
+              If you have any questions about this Privacy Policy, please contact us at <a href="mailto:info@geekguysstudio.com" className="text-blue-600 hover:underline">info@geekguysstudio.com</a>.
             </p>
           </section>
         </div>
