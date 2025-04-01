@@ -2,6 +2,13 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import { supabase } from '@/supabaseClient';
 
+// Función para generar un username a partir del correo
+const generateUsername = (email: string): string => {
+  const base = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+  const randomSuffix = Math.floor(Math.random() * 10000);
+  return `${base}${randomSuffix}`;
+};
+
 export const authOptions = {
   providers: [
     GoogleProvider({
@@ -20,10 +27,9 @@ export const authOptions = {
     },
     async session({ session, token }: any) {
       if (session.user) {
-        
         session.user.id = token.id;
         session.user.email = token.email;
-        
+
         const { data: userData, error } = await supabase
           .from('users')
           .select('profession, username, experience_section_name, education_section_name')
@@ -42,12 +48,18 @@ export const authOptions = {
       return session;
     },
     async signIn({ user, account }: any) {
-      const { email, name, image }: any = user;
-      const google_id = account?.providerAccountId || null;
-
-      console.log('User information from Google:', { email, name, image, google_id });
-
       try {
+        const { email, name, image }: any = user;
+        const google_id = account?.providerAccountId || null;
+
+        if (!email) {
+          console.error('❌ Missing user email in Google data.');
+          return false;
+        }
+
+        console.log('🔐 SignIn attempt:', { email, name, google_id });
+
+        // Buscar si el usuario ya existe en Supabase
         const { data: existingUser, error: checkError } = await supabase
           .from('users')
           .select('*')
@@ -55,37 +67,39 @@ export const authOptions = {
           .maybeSingle();
 
         if (checkError) {
-          console.error('Error checking user in Supabase:', checkError);
+          console.error('❌ Supabase SELECT error:', checkError.message);
           return false;
         }
 
+        // Si no existe, se genera un username y se inserta el usuario
         if (!existingUser) {
-          console.log('User does not exist, inserting into Supabase...');
-          const { error: insertError } = await supabase
-            .from('users')
-            .insert({
-              email,
-              google_id,
-              username: "",
-              name,
-              profile_image: image,
-              experience_section_name: 'Experience',
-              education_section_name: 'Education',
-            });
+          console.log('🆕 Usuario no encontrado, insertando...');
+
+          const username = generateUsername(email);
+
+          const { error: insertError } = await supabase.from('users').insert({
+            email,
+            google_id,
+            username, // Generamos un username único
+            name,
+            profile_image: image || '',
+            experience_section_name: 'Experience',
+            education_section_name: 'Education',
+          });
 
           if (insertError) {
-            console.error('Error inserting user into Supabase:', insertError.message);
+            console.error('❌ Error al insertar usuario:', insertError.message);
             return false;
-          } else {
-            console.log('User inserted successfully into Supabase');
           }
+
+          console.log('✅ Usuario insertado correctamente en Supabase.');
         } else {
-          console.log('User already exists, skipping insertion.');
+          console.log('✔️ Usuario ya existe en Supabase.');
         }
 
         return true;
-      } catch (error) {
-        console.error('Sign-in error:', error);
+      } catch (error: any) {
+        console.error('🔥 Error inesperado en signIn callback:', error.message || error);
         return false;
       }
     },
